@@ -32,7 +32,10 @@ here. The project's original source, prior to migration, lives in
   from a gate sheet), `supplement` (send ADD commands from the "Doplnit"
   sheet), `find-one` (send one FIND command), `find-sheet` (send FIND
   commands for all numbers in a sheet), and `duplicates` (list duplicate
-  phone numbers in a gate sheet).
+  phone numbers in a gate sheet). The five SMS-sending subcommands (`send`,
+  `send-batch`, `supplement`, `find-one`, `find-sheet`) accept a
+  `--timeout` option for the HTTP timeout used when talking to the SMS
+  gateway, matching the Streamlit UI's per-operation timeout input.
 - `streamlit_app.py` — web UI: sheet overview, an inline editor that saves
   changes back to the Excel workbook, batch ADD/FIND operations, one-off
   SMS sending, and data quality checks.
@@ -71,7 +74,6 @@ root `.gitignore`'s `config.toml` entry.
 - A `<workbook>.lock` file left behind by a process that crashes mid-save
   is not automatically cleared (no staleness/TTL recovery); such a lock
   would need to be removed manually before further saves can succeed.
-- CLI commands do not expose a `--timeout` option, unlike the Streamlit UI.
 - The phone number column layout is assumed uniform across all configured
   gate sheets, via a single global column-index constant.
 

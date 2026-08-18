@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Sequence
 
 from send_sms import (
+    DEFAULT_SEND_TIMEOUT,
     ConfigurationError,
     SpreadsheetError,
     doplneni_seznamu_zavor,
@@ -28,6 +29,12 @@ def build_parser() -> argparse.ArgumentParser:
     send_parser = subparsers.add_parser("send", help="Send one SMS to an arbitrary number.")
     send_parser.add_argument("--phone", required=True, help="Recipient phone number.")
     send_parser.add_argument("--message", required=True, help="Message text.")
+    send_parser.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_SEND_TIMEOUT,
+        help="HTTP timeout for the gateway request, in seconds.",
+    )
 
     batch_parser = subparsers.add_parser("send-batch", help="Send ADD commands from a gate sheet.")
     batch_parser.add_argument("--gate", required=True, type=int, help="Configured gate id.")
@@ -38,6 +45,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--continue-on-error",
         action="store_true",
         help="Continue sending even when one request fails.",
+    )
+    batch_parser.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_SEND_TIMEOUT,
+        help="HTTP timeout for the gateway request, in seconds.",
     )
 
     supplement_parser = subparsers.add_parser("supplement", help="Send ADD commands from sheet 'Doplnit'.")
@@ -50,11 +63,23 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Continue sending even when one request fails.",
     )
+    supplement_parser.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_SEND_TIMEOUT,
+        help="HTTP timeout for the gateway request, in seconds.",
+    )
 
     find_one_parser = subparsers.add_parser("find-one", help="Send one FIND command.")
     find_one_parser.add_argument("--gate", required=True, type=int, help="Configured gate id.")
     find_one_parser.add_argument("--number", required=True, help="Phone number to search on the gate.")
     find_one_parser.add_argument("--dry-run", action="store_true", help="Build message but do not send it.")
+    find_one_parser.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_SEND_TIMEOUT,
+        help="HTTP timeout for the gateway request, in seconds.",
+    )
 
     find_sheet_parser = subparsers.add_parser("find-sheet", help="Send FIND commands for all numbers in a sheet.")
     find_sheet_parser.add_argument("--gate", required=True, type=int, help="Configured gate id.")
@@ -64,6 +89,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--continue-on-error",
         action="store_true",
         help="Continue sending even when one request fails.",
+    )
+    find_sheet_parser.add_argument(
+        "--timeout",
+        type=float,
+        default=DEFAULT_SEND_TIMEOUT,
+        help="HTTP timeout for the gateway request, in seconds.",
     )
 
     duplicates_parser = subparsers.add_parser("duplicates", help="List duplicate phone numbers in a gate sheet.")
@@ -94,7 +125,7 @@ def main() -> int:
 
     try:
         if args.command == "send":
-            payload = poslat_sms(args.phone, args.message, config_path=args.config)
+            payload = poslat_sms(args.phone, args.message, config_path=args.config, timeout=args.timeout)
             print(json.dumps(payload, ensure_ascii=False, indent=2))
             return 0 if payload["ok"] else 1
 
@@ -106,6 +137,7 @@ def main() -> int:
                 dry_run=args.dry_run,
                 stop_on_error=not args.continue_on_error,
                 config_path=args.config,
+                timeout=args.timeout,
             )
             print(serialize_results(results))
             return 0 if all(result.ok for result in results) else 1
@@ -118,6 +150,7 @@ def main() -> int:
                 dry_run=args.dry_run,
                 stop_on_error=not args.continue_on_error,
                 config_path=args.config,
+                timeout=args.timeout,
             )
             print(serialize_results(results))
             return 0 if all(result.ok for result in results) else 1
@@ -128,6 +161,7 @@ def main() -> int:
                 args.number,
                 dry_run=args.dry_run,
                 config_path=args.config,
+                timeout=args.timeout,
             )
             print(json.dumps(result.__dict__, ensure_ascii=False, indent=2))
             return 0 if result.ok else 1
@@ -139,6 +173,7 @@ def main() -> int:
                 dry_run=args.dry_run,
                 stop_on_error=not args.continue_on_error,
                 config_path=args.config,
+                timeout=args.timeout,
             )
             print(serialize_results(results))
             return 0 if all(result.ok for result in results) else 1
