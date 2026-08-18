@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0004
 
-Status: READY_FOR_REVIEWER
+Status: APPROVED
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_REVIEWER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `reviewer`
-- Handed off to: `reviewer`
+- Currently with: `owner`
+- Handed off to: `owner`
 - Created at: `2026-08-18T15:29:30+02:00`
-- Updated at: `2026-08-18T15:32:54+02:00`
+- Updated at: `2026-08-18T15:34:07+02:00`
 
 ---
 
@@ -65,7 +65,7 @@ Acceptance criteria:
 - duplicates_parser does not gain a --timeout argument
 - No existing argument on any of the six subparsers (--phone, --message, --gate, --batch-size, --pause-seconds, --dry-run, --continue-on-error, --number, --config, --verbose) is removed, renamed, or has its default changed
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -83,7 +83,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:34:07+02:00._
+
+Verified project/main.py lines 9-19: DEFAULT_SEND_TIMEOUT is imported alongside the pre-existing names. Verified send_parser (l.32-37), batch_parser (l.44-54), supplement_parser (l.61-71), find_one_parser (l.77-82), and find_sheet_parser (l.88-98) each gained --timeout with type=float, default=DEFAULT_SEND_TIMEOUT, and the help text 'HTTP timeout for the gateway request, in seconds.' — matching the required description. duplicates_parser (l.100-101) has only --gate, no --timeout. Diffed argument lists against the Current State description: --phone, --message, --gate, --batch-size, --pause-seconds, --dry-run, --continue-on-error, --number are all still present with unchanged defaults/types; --config and --verbose (top-level parser args) are also untouched.
 
 ## Point 2
 
@@ -98,7 +100,7 @@ Acceptance criteria:
 - The 'duplicates' branch (najit_duplikaty call) is unchanged and receives no timeout argument
 - Running main.py with no --timeout flag on any of the five subcommands produces the exact same effective timeout value as before this change (DEFAULT_SEND_TIMEOUT), verified by reading that the new default matches the value each function already fell back to
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -116,7 +118,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:34:07+02:00._
+
+Verified main()'s five branches (lines 127-179): send calls poslat_sms(..., timeout=args.timeout), send-batch calls poslat_davkove_sms(..., timeout=args.timeout), supplement calls doplneni_seznamu_zavor(..., timeout=args.timeout), find-one calls najit_cislo_na_zavore(..., timeout=args.timeout), find-sheet calls najit_cisla_ze_seznamu_na_zavore(..., timeout=args.timeout). The duplicates branch (l.182) still reads najit_duplikaty(args.gate, config_path=args.config), unchanged, correctly receiving no timeout argument since that function accepts none (confirmed in send_sms.py — najit_duplikaty's signature has no timeout parameter). Read send_sms.py directly and confirmed timeout is keyword-only (after `*`) on all five target functions, each defaulting to DEFAULT_SEND_TIMEOUT = 10.0 (send_sms.py:26), so the new CLI default is identical to the prior implicit behavior when --timeout is omitted — satisfies the point's read-time verification requirement, consistent with the Architecture Review's explicit note that this criterion calls for a read-time check rather than a new automated test.
 
 ## Point 3
 
@@ -128,7 +132,7 @@ Acceptance criteria:
 - The other three 'Current limitations' bullets (missing tests for main.py/streamlit_app.py, stale-lock recovery, single global phone-column-index assumption) remain present and unaltered
 - No other section of project/README.md is modified
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -146,7 +150,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:34:07+02:00._
+
+Read project/README.md in full. Grepped for 'CLI commands do not expose' — zero matches, confirming the bullet is fully removed from 'Current limitations'. The 'Current capabilities (v0.1)' main.py bullet (lines 30-38) now includes: 'The five SMS-sending subcommands ... accept a --timeout option for the HTTP timeout used when talking to the SMS gateway, matching the Streamlit UI's per-operation timeout input.' The other three 'Current limitations' bullets (missing main.py/streamlit_app.py tests, stale-lock recovery, single global phone-column-index assumption, lines 72-78) are present verbatim and unaltered. No other section (Purpose, Development environment, Planned evolution) shows any unrelated edit; 'Planned evolution' still references 'CLI/UI parameter parity' as a pre-existing general phrase from an earlier contract, left untouched as required — not part of this point's scope.
 
 ---
 
@@ -198,7 +204,11 @@ Added --timeout float CLI argument to the five SMS-sending subcommands in projec
 
 # Implementation Review
 
-_Awaiting implementation review._
+### Round 1 — 2026-08-18T15:34:07+02:00 — Verdict: APPROVED — Reviewer: `reviewer`
+
+All three points are correctly implemented and match both the contract text and the Architecture Review's findings. project/main.py imports DEFAULT_SEND_TIMEOUT from send_sms, adds a --timeout float argument (default DEFAULT_SEND_TIMEOUT, correct help text) to send_parser, batch_parser, supplement_parser, find_one_parser, and find_sheet_parser, and leaves duplicates_parser untouched with only --gate. All five main() dispatch branches now pass timeout=args.timeout to poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, and najit_cisla_ze_seznamu_na_zavore respectively; the duplicates branch's najit_duplikaty call is unchanged. Verified in send_sms.py that all five target functions declare timeout as a keyword-only parameter (after `*`) defaulting to DEFAULT_SEND_TIMEOUT (=10.0), and that najit_duplikaty has no timeout parameter at all — so backward compatibility (identical effective default when --timeout is omitted) holds exactly as claimed. No existing argument (--phone, --message, --gate, --batch-size, --pause-seconds, --dry-run, --continue-on-error, --number, --config, --verbose) was altered. project/README.md had the 'CLI commands do not expose a --timeout option' bullet fully removed from 'Current limitations' (confirmed via grep — zero matches remain) and a new sentence added to the existing main.py bullet in 'Current capabilities (v0.1)' describing the new capability; the other three limitations bullets (missing main.py/streamlit_app.py tests, stale-lock recovery, single global phone-column-index assumption) remain present and unaltered, and no other README section was touched.
+
+Out of Scope check: OK — Discovery diff listed four changed files: agents/architect/WORKING_STATE.md, agents/programmer/runtime/session.log, project/README.md, project/main.py. The contract's Outputs section calls for exactly project/main.py and project/README.md, both confirmed in scope and content-checked above. agents/architect/WORKING_STATE.md is explicitly self-documented as 'Generated automatically from the live contract queue on every state change (Tr5-base decision 10) — do not edit by hand' and its content is just the queue status line for CONTRACT_0004 — an automatic pipeline artifact, not a manual programmer edit. agents/programmer/runtime/session.log is an append-only tool-call trace; inspecting its content shows earlier entries (12:44-15:12) belonging to prior contracts/sessions, and the entries in this contract's actual working window (15:31:16-15:32:38) touch only project/main.py (six Edit calls) and project/README.md (two Edit calls plus reads), matching exactly what the contract's points require — no unrelated file writes appear anywhere in the log. No test file, no send_sms.py, no streamlit_app.py, and no other README section were touched. Conclusion: nothing beyond the contract's points was touched.
 
 ---
 
@@ -212,12 +222,12 @@ _Not filled in._
 {
   "number": 4,
   "title": "Add --timeout CLI parity to main.py's SMS-sending subcommands",
-  "status": "READY_FOR_REVIEWER",
+  "status": "APPROVED",
   "created_by": "architect",
-  "assigned_to": "reviewer",
-  "handoff_to": "reviewer",
+  "assigned_to": "owner",
+  "handoff_to": "owner",
   "created_at": "2026-08-18T15:29:30+02:00",
-  "updated_at": "2026-08-18T15:32:54+02:00",
+  "updated_at": "2026-08-18T15:34:07+02:00",
   "points": [
     {
       "number": 1,
@@ -239,10 +249,10 @@ _Not filled in._
         "Manual read-through of project/send_sms.py: confirmed timeout is keyword-only with default DEFAULT_SEND_TIMEOUT (=10.0) on poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, and najit_cisla_ze_seznamu_na_zavore, and that najit_duplikaty has no timeout parameter.",
         "Manual read-through of project/README.md after edits: confirmed the --timeout bullet moved from 'Current limitations' into 'Current capabilities (v0.1)' and the other three limitations bullets are untouched."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Verified project/main.py lines 9-19: DEFAULT_SEND_TIMEOUT is imported alongside the pre-existing names. Verified send_parser (l.32-37), batch_parser (l.44-54), supplement_parser (l.61-71), find_one_parser (l.77-82), and find_sheet_parser (l.88-98) each gained --timeout with type=float, default=DEFAULT_SEND_TIMEOUT, and the help text 'HTTP timeout for the gateway request, in seconds.' — matching the required description. duplicates_parser (l.100-101) has only --gate, no --timeout. Diffed argument lists against the Current State description: --phone, --message, --gate, --batch-size, --pause-seconds, --dry-run, --continue-on-error, --number are all still present with unchanged defaults/types; --config and --verbose (top-level parser args) are also untouched.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:34:07+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 2,
@@ -267,10 +277,10 @@ _Not filled in._
         "Manual read-through of project/send_sms.py: confirmed timeout is keyword-only with default DEFAULT_SEND_TIMEOUT (=10.0) on poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, and najit_cisla_ze_seznamu_na_zavore, and that najit_duplikaty has no timeout parameter.",
         "Manual read-through of project/README.md after edits: confirmed the --timeout bullet moved from 'Current limitations' into 'Current capabilities (v0.1)' and the other three limitations bullets are untouched."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Verified main()'s five branches (lines 127-179): send calls poslat_sms(..., timeout=args.timeout), send-batch calls poslat_davkove_sms(..., timeout=args.timeout), supplement calls doplneni_seznamu_zavor(..., timeout=args.timeout), find-one calls najit_cislo_na_zavore(..., timeout=args.timeout), find-sheet calls najit_cisla_ze_seznamu_na_zavore(..., timeout=args.timeout). The duplicates branch (l.182) still reads najit_duplikaty(args.gate, config_path=args.config), unchanged, correctly receiving no timeout argument since that function accepts none (confirmed in send_sms.py — najit_duplikaty's signature has no timeout parameter). Read send_sms.py directly and confirmed timeout is keyword-only (after `*`) on all five target functions, each defaulting to DEFAULT_SEND_TIMEOUT = 10.0 (send_sms.py:26), so the new CLI default is identical to the prior implicit behavior when --timeout is omitted — satisfies the point's read-time verification requirement, consistent with the Architecture Review's explicit note that this criterion calls for a read-time check rather than a new automated test.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:34:07+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 3,
@@ -292,10 +302,10 @@ _Not filled in._
         "Manual read-through of project/send_sms.py: confirmed timeout is keyword-only with default DEFAULT_SEND_TIMEOUT (=10.0) on poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, and najit_cisla_ze_seznamu_na_zavore, and that najit_duplikaty has no timeout parameter.",
         "Manual read-through of project/README.md after edits: confirmed the --timeout bullet moved from 'Current limitations' into 'Current capabilities (v0.1)' and the other three limitations bullets are untouched."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Read project/README.md in full. Grepped for 'CLI commands do not expose' — zero matches, confirming the bullet is fully removed from 'Current limitations'. The 'Current capabilities (v0.1)' main.py bullet (lines 30-38) now includes: 'The five SMS-sending subcommands ... accept a --timeout option for the HTTP timeout used when talking to the SMS gateway, matching the Streamlit UI's per-operation timeout input.' The other three 'Current limitations' bullets (missing main.py/streamlit_app.py tests, stale-lock recovery, single global phone-column-index assumption, lines 72-78) are present verbatim and unaltered. No other section (Purpose, Development environment, Planned evolution) shows any unrelated edit; 'Planned evolution' still references 'CLI/UI parameter parity' as a pre-existing general phrase from an earlier contract, left untouched as required — not part of this point's scope.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:34:07+02:00",
+      "status": "APPROVED"
     }
   ],
   "implementer": "programmer",
@@ -319,6 +329,33 @@ _Not filled in._
     }
   ],
   "completion_notes": "Added --timeout float CLI argument to the five SMS-sending subcommands in project/main.py (send, send-batch, supplement, find-one, find-sheet), imported DEFAULT_SEND_TIMEOUT from send_sms.py as the argument's default, and wired args.timeout through as the timeout= keyword to each corresponding send_sms.py function call. The duplicates subcommand and all other existing arguments/defaults were left untouched. Updated project/README.md to move the resolved 'CLI commands do not expose a --timeout option' limitation into 'Current capabilities (v0.1)', rephrased to describe the new capability, while leaving the other three limitations bullets unchanged. No Bash/test-execution tool is available under this agent's 'edit' permission profile, so Point 2's verification was done by reading the diff (per that point's own acceptance criteria, which explicitly calls for a read-time check, not a new automated test) — consistent with the Intent's explicit statement that no new test coverage for main.py is added by this contract.",
-  "implementation_review_rounds": []
+  "implementation_review_rounds": [
+    {
+      "round": 1,
+      "date": "2026-08-18T15:34:07+02:00",
+      "verdict": "APPROVED",
+      "reviewer": "reviewer",
+      "summary": "All three points are correctly implemented and match both the contract text and the Architecture Review's findings. project/main.py imports DEFAULT_SEND_TIMEOUT from send_sms, adds a --timeout float argument (default DEFAULT_SEND_TIMEOUT, correct help text) to send_parser, batch_parser, supplement_parser, find_one_parser, and find_sheet_parser, and leaves duplicates_parser untouched with only --gate. All five main() dispatch branches now pass timeout=args.timeout to poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, and najit_cisla_ze_seznamu_na_zavore respectively; the duplicates branch's najit_duplikaty call is unchanged. Verified in send_sms.py that all five target functions declare timeout as a keyword-only parameter (after `*`) defaulting to DEFAULT_SEND_TIMEOUT (=10.0), and that najit_duplikaty has no timeout parameter at all — so backward compatibility (identical effective default when --timeout is omitted) holds exactly as claimed. No existing argument (--phone, --message, --gate, --batch-size, --pause-seconds, --dry-run, --continue-on-error, --number, --config, --verbose) was altered. project/README.md had the 'CLI commands do not expose a --timeout option' bullet fully removed from 'Current limitations' (confirmed via grep — zero matches remain) and a new sentence added to the existing main.py bullet in 'Current capabilities (v0.1)' describing the new capability; the other three limitations bullets (missing main.py/streamlit_app.py tests, stale-lock recovery, single global phone-column-index assumption) remain present and unaltered, and no other README section was touched.",
+      "out_of_scope_ok": true,
+      "out_of_scope_findings": "Discovery diff listed four changed files: agents/architect/WORKING_STATE.md, agents/programmer/runtime/session.log, project/README.md, project/main.py. The contract's Outputs section calls for exactly project/main.py and project/README.md, both confirmed in scope and content-checked above. agents/architect/WORKING_STATE.md is explicitly self-documented as 'Generated automatically from the live contract queue on every state change (Tr5-base decision 10) — do not edit by hand' and its content is just the queue status line for CONTRACT_0004 — an automatic pipeline artifact, not a manual programmer edit. agents/programmer/runtime/session.log is an append-only tool-call trace; inspecting its content shows earlier entries (12:44-15:12) belonging to prior contracts/sessions, and the entries in this contract's actual working window (15:31:16-15:32:38) touch only project/main.py (six Edit calls) and project/README.md (two Edit calls plus reads), matching exactly what the contract's points require — no unrelated file writes appear anywhere in the log. No test file, no send_sms.py, no streamlit_app.py, and no other README section were touched. Conclusion: nothing beyond the contract's points was touched.",
+      "reviews": [
+        {
+          "point": 1,
+          "status": "APPROVED",
+          "review": "Verified project/main.py lines 9-19: DEFAULT_SEND_TIMEOUT is imported alongside the pre-existing names. Verified send_parser (l.32-37), batch_parser (l.44-54), supplement_parser (l.61-71), find_one_parser (l.77-82), and find_sheet_parser (l.88-98) each gained --timeout with type=float, default=DEFAULT_SEND_TIMEOUT, and the help text 'HTTP timeout for the gateway request, in seconds.' — matching the required description. duplicates_parser (l.100-101) has only --gate, no --timeout. Diffed argument lists against the Current State description: --phone, --message, --gate, --batch-size, --pause-seconds, --dry-run, --continue-on-error, --number are all still present with unchanged defaults/types; --config and --verbose (top-level parser args) are also untouched."
+        },
+        {
+          "point": 2,
+          "status": "APPROVED",
+          "review": "Verified main()'s five branches (lines 127-179): send calls poslat_sms(..., timeout=args.timeout), send-batch calls poslat_davkove_sms(..., timeout=args.timeout), supplement calls doplneni_seznamu_zavor(..., timeout=args.timeout), find-one calls najit_cislo_na_zavore(..., timeout=args.timeout), find-sheet calls najit_cisla_ze_seznamu_na_zavore(..., timeout=args.timeout). The duplicates branch (l.182) still reads najit_duplikaty(args.gate, config_path=args.config), unchanged, correctly receiving no timeout argument since that function accepts none (confirmed in send_sms.py — najit_duplikaty's signature has no timeout parameter). Read send_sms.py directly and confirmed timeout is keyword-only (after `*`) on all five target functions, each defaulting to DEFAULT_SEND_TIMEOUT = 10.0 (send_sms.py:26), so the new CLI default is identical to the prior implicit behavior when --timeout is omitted — satisfies the point's read-time verification requirement, consistent with the Architecture Review's explicit note that this criterion calls for a read-time check rather than a new automated test."
+        },
+        {
+          "point": 3,
+          "status": "APPROVED",
+          "review": "Read project/README.md in full. Grepped for 'CLI commands do not expose' — zero matches, confirming the bullet is fully removed from 'Current limitations'. The 'Current capabilities (v0.1)' main.py bullet (lines 30-38) now includes: 'The five SMS-sending subcommands ... accept a --timeout option for the HTTP timeout used when talking to the SMS gateway, matching the Streamlit UI's per-operation timeout input.' The other three 'Current limitations' bullets (missing main.py/streamlit_app.py tests, stale-lock recovery, single global phone-column-index assumption, lines 72-78) are present verbatim and unaltered. No other section (Purpose, Development environment, Planned evolution) shows any unrelated edit; 'Planned evolution' still references 'CLI/UI parameter parity' as a pre-existing general phrase from an earlier contract, left untouched as required — not part of this point's scope."
+        }
+      ]
+    }
+  ]
 }
 CONTRACT-META -->
