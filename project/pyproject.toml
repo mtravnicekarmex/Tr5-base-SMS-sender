@@ -1,0 +1,14 @@
+[project]
+name = "sms-gateway-helper"
+version = "0.1.0"
+description = "CLI helper for managing gate phone numbers over an SMS gateway."
+requires-python = ">=3.11"
+dependencies = [
+  "openpyxl>=3.1",
+  "pandas>=2.0",
+  "requests>=2.31",
+  "streamlit>=1.54",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

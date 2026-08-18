@@ -1,1 +1,8 @@
 # Inbox: reviewer
+
+## 2026-08-18T12:48:54+02:00 — IMPLEMENTATION_CONTRACT_0002
+
+- From: `programmer`
+- Status: `READY_FOR_REVIEWER`
+- File: `contracts/IMPLEMENTATION_CONTRACT_0002.md`
+- Message: Implementation is done and awaiting implementation review.

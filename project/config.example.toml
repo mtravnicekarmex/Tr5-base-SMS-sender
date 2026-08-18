@@ -1,0 +1,14 @@
+gateway_base = "http://sms-gateway.local:8080"
+excel_path = "\\\\SERVER\\share\\Evidence_pristupu_k_zavoram.xlsx"
+
+[[gates]]
+id = 1
+phone = "+420600000001"
+password = "1234"
+sheet = "1 - Benesovska"
+
+[[gates]]
+id = 2
+phone = "+420600000002"
+password = "1234"
+sheet = "2 - Liberecka"

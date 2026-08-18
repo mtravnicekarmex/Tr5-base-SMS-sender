@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0002
 
-Status: READY_FOR_PROGRAMMER
+Status: READY_FOR_REVIEWER
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_PROGRAMMER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `programmer`
-- Handed off to: `programmer`
+- Currently with: `reviewer`
+- Handed off to: `reviewer`
 - Created at: `2026-08-18T11:46:11+02:00`
-- Updated at: `2026-08-18T12:44:25+02:00`
+- Updated at: `2026-08-18T12:48:44+02:00`
 
 ---
 
@@ -63,11 +63,19 @@ Acceptance criteria:
 - project/send_sms.py exists and its content is byte-for-byte identical to source/project/send_sms.py at the time of copying
 - source/project/send_sms.py is unchanged after the operation
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read source/project/send_sms.py in full and wrote its exact content to project/send_sms.py via Write. Content verified identical (700 lines, same imports, dataclasses, functions). source/project/send_sms.py was only read, never written to, so it remains unchanged.
+
+Files touched:
+- `project/send_sms.py`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -81,11 +89,19 @@ Acceptance criteria:
 - project/main.py exists and its content is byte-for-byte identical to source/project/main.py at the time of copying
 - source/project/main.py is unchanged after the operation
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read source/project/main.py in full and wrote its exact content to project/main.py via Write. source/project/main.py was only read, never modified.
+
+Files touched:
+- `project/main.py`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -99,11 +115,19 @@ Acceptance criteria:
 - project/streamlit_app.py exists and its content is byte-for-byte identical to source/project/streamlit_app.py at the time of copying
 - source/project/streamlit_app.py is unchanged after the operation
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read source/project/streamlit_app.py in full and wrote its exact content to project/streamlit_app.py via Write. source/project/streamlit_app.py was only read, never modified.
+
+Files touched:
+- `project/streamlit_app.py`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -117,11 +141,19 @@ Acceptance criteria:
 - project/pyproject.toml exists and its content is byte-for-byte identical to source/project/pyproject.toml at the time of copying
 - source/project/pyproject.toml is unchanged after the operation
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read source/project/pyproject.toml in full and wrote its exact content to project/pyproject.toml via Write. source/project/pyproject.toml was only read, never modified.
+
+Files touched:
+- `project/pyproject.toml`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -136,11 +168,19 @@ Acceptance criteria:
 - source/project/config.example.toml is unchanged after the operation
 - No project/config.toml (a real, non-example config file) is created as part of this point
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read source/project/config.example.toml in full and wrote its exact content to project/config.example.toml via Write. No project/config.toml (real config) was created — only the example file was copied. source/project/config.example.toml was only read, never modified.
+
+Files touched:
+- `project/config.example.toml`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -154,11 +194,19 @@ Acceptance criteria:
 - project/tests/test_send_sms.py exists and its content is byte-for-byte identical to source/project/tests/test_send_sms.py at the time of copying
 - source/project/tests/test_send_sms.py is unchanged after the operation
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read source/project/tests/test_send_sms.py in full and wrote its exact content to project/tests/test_send_sms.py via Write, which implicitly created the project/tests/ directory. source/project/tests/test_send_sms.py was only read, never modified.
+
+Files touched:
+- `project/tests/test_send_sms.py`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -173,11 +221,19 @@ Acceptance criteria:
 - No file named project/SESSION_2026-04-10.md (with hyphens) is created
 - source/project/SESSION_2026-04-10.md is unchanged after the operation
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read source/project/SESSION_2026-04-10.md in full and wrote its exact content, byte-for-byte, to a new file named project/SESSION_2026_04_10.md (underscores per ADR-008; the file's own internal text still references 'SESSION_2026-04-10.md' by name since content is verbatim/unmodified, only the filename differs). No file named project/SESSION_2026-04-10.md (with hyphens) was created. source/project/SESSION_2026-04-10.md was only read, never modified.
+
+Files touched:
+- `project/SESSION_2026_04_10.md`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -192,11 +248,19 @@ Acceptance criteria:
 - Reading the updated root .gitignore shows every line that existed before this edit is still present and unaltered, with only the new 'config.toml' line added
 - No project/.gitignore file is created as part of this point
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Read the root .gitignore, then used Edit to append a new line 'config.toml' immediately after the existing '.discovery/' line. Re-read the file afterward and confirmed all 10 prior lines (.env, __pycache__/, .venv/, .pytest_cache/, .pytest-tmp/, .idea/, agents/*/runtime/*, !agents/*/runtime/.gitkeep, agents/*/logs/, .discovery/) are unchanged and present, with only the new 'config.toml' line added as line 11. No project/.gitignore file was created.
+
+Files touched:
+- `.gitignore`
+
+Tests:
+- No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections.
 
 Reviewer's implementation review for this point:
 
@@ -211,11 +275,18 @@ Acceptance criteria:
 - For each of the seven files copied in points 1-7, its own point's 'unchanged after the operation' criterion is confirmed to still hold at this final check
 - A Glob listing of source/ outside source/project/ shows no new, removed, or renamed file compared to before this contract began
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-18T12:48:44+02:00._
+
+Ran Glob 'source/project/*' and 'source/project/tests/*' after all copy operations: results show exactly send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, SESSION_2026-04-10.md, README.md, .gitignore (8 files at the project/ level) plus tests/test_send_sms.py — matching the expected 9-item set exactly, with nothing added, removed, or renamed. Also ran Glob 'source/*' to confirm the source/ root (.env, .env.example, .gitignore, AGENTS.md, AGENTS_SUGGESTIONS.md, PRINCIPLES.md, README.md, UPDATE_NOTES.md, chat_architect.py, requirements.txt) is unaffected by this contract. Since every one of points 1-7 only used the Read tool against source/project/ files (never Edit or Write), each file's 'unchanged after the operation' criterion holds by construction, and this final listing corroborates no accidental change occurred.
+
+Tests:
+- Glob source/project/* — 8 files, matches pre-contract inventory
+- Glob source/project/tests/* — test_send_sms.py present, matches pre-contract inventory
+- Glob source/* — 10 items, unchanged from pre-contract state
 
 Reviewer's implementation review for this point:
 
@@ -275,7 +346,7 @@ Once this migration lands and the owner has manually confirmed (outside this con
 
 # Completion Notes
 
-_Awaiting implementation._
+Migrated the SMS gateway application from the read-only source/project/ reference into project/ via verbatim Read+Write copies (no Bash tool available, consistent with the programmer's 'edit' permission profile). Created project/send_sms.py, project/main.py, project/streamlit_app.py, project/pyproject.toml, project/config.example.toml, project/tests/test_send_sms.py, and project/SESSION_2026_04_10.md (renamed from the hyphenated source name per ADR-008). Added a single 'config.toml' line to the repository root .gitignore, appended after the existing .discovery/ line with all prior lines preserved unaltered. Verified via Glob that source/project/ still contains exactly its original 9 items and that source/ outside source/project/ is untouched. No environment setup, dependency installation, or test execution was attempted — these remain explicit manual follow-ups for the owner per the contract's Out of Scope section, since the programmer has no Bash tool access.
 
 ---
 
@@ -295,12 +366,12 @@ _Not filled in._
 {
   "number": 2,
   "title": "Migrate SMS gateway application from read-only source/project/ into project/",
-  "status": "READY_FOR_PROGRAMMER",
+  "status": "READY_FOR_REVIEWER",
   "created_by": "architect",
-  "assigned_to": "programmer",
-  "handoff_to": "programmer",
+  "assigned_to": "reviewer",
+  "handoff_to": "reviewer",
   "created_at": "2026-08-18T11:46:11+02:00",
-  "updated_at": "2026-08-18T12:44:25+02:00",
+  "updated_at": "2026-08-18T12:48:44+02:00",
   "points": [
     {
       "number": 1,
@@ -309,15 +380,19 @@ _Not filled in._
         "project/send_sms.py exists and its content is byte-for-byte identical to source/project/send_sms.py at the time of copying",
         "source/project/send_sms.py is unchanged after the operation"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read source/project/send_sms.py in full and wrote its exact content to project/send_sms.py via Write. Content verified identical (700 lines, same imports, dataclasses, functions). source/project/send_sms.py was only read, never written to, so it remains unchanged.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        "project/send_sms.py"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 2,
@@ -326,15 +401,19 @@ _Not filled in._
         "project/main.py exists and its content is byte-for-byte identical to source/project/main.py at the time of copying",
         "source/project/main.py is unchanged after the operation"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read source/project/main.py in full and wrote its exact content to project/main.py via Write. source/project/main.py was only read, never modified.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        "project/main.py"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 3,
@@ -343,15 +422,19 @@ _Not filled in._
         "project/streamlit_app.py exists and its content is byte-for-byte identical to source/project/streamlit_app.py at the time of copying",
         "source/project/streamlit_app.py is unchanged after the operation"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read source/project/streamlit_app.py in full and wrote its exact content to project/streamlit_app.py via Write. source/project/streamlit_app.py was only read, never modified.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        "project/streamlit_app.py"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 4,
@@ -360,15 +443,19 @@ _Not filled in._
         "project/pyproject.toml exists and its content is byte-for-byte identical to source/project/pyproject.toml at the time of copying",
         "source/project/pyproject.toml is unchanged after the operation"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read source/project/pyproject.toml in full and wrote its exact content to project/pyproject.toml via Write. source/project/pyproject.toml was only read, never modified.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        "project/pyproject.toml"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 5,
@@ -378,15 +465,19 @@ _Not filled in._
         "source/project/config.example.toml is unchanged after the operation",
         "No project/config.toml (a real, non-example config file) is created as part of this point"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read source/project/config.example.toml in full and wrote its exact content to project/config.example.toml via Write. No project/config.toml (real config) was created — only the example file was copied. source/project/config.example.toml was only read, never modified.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        "project/config.example.toml"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 6,
@@ -395,15 +486,19 @@ _Not filled in._
         "project/tests/test_send_sms.py exists and its content is byte-for-byte identical to source/project/tests/test_send_sms.py at the time of copying",
         "source/project/tests/test_send_sms.py is unchanged after the operation"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read source/project/tests/test_send_sms.py in full and wrote its exact content to project/tests/test_send_sms.py via Write, which implicitly created the project/tests/ directory. source/project/tests/test_send_sms.py was only read, never modified.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        "project/tests/test_send_sms.py"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 7,
@@ -413,15 +508,19 @@ _Not filled in._
         "No file named project/SESSION_2026-04-10.md (with hyphens) is created",
         "source/project/SESSION_2026-04-10.md is unchanged after the operation"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read source/project/SESSION_2026-04-10.md in full and wrote its exact content, byte-for-byte, to a new file named project/SESSION_2026_04_10.md (underscores per ADR-008; the file's own internal text still references 'SESSION_2026-04-10.md' by name since content is verbatim/unmodified, only the filename differs). No file named project/SESSION_2026-04-10.md (with hyphens) was created. source/project/SESSION_2026-04-10.md was only read, never modified.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        "project/SESSION_2026_04_10.md"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 8,
@@ -431,15 +530,19 @@ _Not filled in._
         "Reading the updated root .gitignore shows every line that existed before this edit is still present and unaltered, with only the new 'config.toml' line added",
         "No project/.gitignore file is created as part of this point"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Read the root .gitignore, then used Edit to append a new line 'config.toml' immediately after the existing '.discovery/' line. Re-read the file afterward and confirmed all 10 prior lines (.env, __pycache__/, .venv/, .pytest_cache/, .pytest-tmp/, .idea/, agents/*/runtime/*, !agents/*/runtime/.gitkeep, agents/*/logs/, .discovery/) are unchanged and present, with only the new 'config.toml' line added as line 11. No project/.gitignore file was created.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
+      "programmer_files": [
+        ".gitignore"
+      ],
+      "programmer_tests": [
+        "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 9,
@@ -449,15 +552,19 @@ _Not filled in._
         "For each of the seven files copied in points 1-7, its own point's 'unchanged after the operation' criterion is confirmed to still hold at this final check",
         "A Glob listing of source/ outside source/project/ shows no new, removed, or renamed file compared to before this contract began"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
+      "programmer_note": "Ran Glob 'source/project/*' and 'source/project/tests/*' after all copy operations: results show exactly send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, SESSION_2026-04-10.md, README.md, .gitignore (8 files at the project/ level) plus tests/test_send_sms.py — matching the expected 9-item set exactly, with nothing added, removed, or renamed. Also ran Glob 'source/*' to confirm the source/ root (.env, .env.example, .gitignore, AGENTS.md, AGENTS_SUGGESTIONS.md, PRINCIPLES.md, README.md, UPDATE_NOTES.md, chat_architect.py, requirements.txt) is unaffected by this contract. Since every one of points 1-7 only used the Read tool against source/project/ files (never Edit or Write), each file's 'unchanged after the operation' criterion holds by construction, and this final listing corroborates no accidental change occurred.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-18T12:48:44+02:00",
       "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_tests": [
+        "Glob source/project/* — 8 files, matches pre-contract inventory",
+        "Glob source/project/tests/* — test_send_sms.py present, matches pre-contract inventory",
+        "Glob source/* — 10 items, unchanged from pre-contract state"
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     }
   ],
   "implementer": "programmer",
@@ -494,7 +601,7 @@ _Not filled in._
       "findings": "Independently re-verified this contract (round 3, fresh thread per Tr5-base decision 9) against AGENTS.md, memory/DECISIONS.md (ADR-008, ADR-016, ADR-022, ADR-024, ADR-029, decision 7's risk criteria), and the live repository state — not against the prior two rounds' text alone. Both blocking gaps from rounds 1 and 2 are genuinely resolved in the current point text: (1) Point 7 now renames SESSION_2026-04-10.md to SESSION_2026_04_10.md with the ADR-008 rationale stated and an explicit no-hyphenated-file criterion; independently confirmed all 7 other output filenames (send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, tests/test_send_sms.py) are already lowercase_with_underscores, no hyphens/diacritics. (2) Re-read agents/agent.py directly: CLAUDE_EDIT_TOOLS = (Read, Grep, Glob, Edit, Write), no Bash, matching agents/programmer/config.json's permission_profile 'edit'. Point 8's acceptance criteria now read the updated .gitignore via Read rather than `git check-ignore`, and Point 9 verifies via Glob listing rather than `git status`/`git diff` — all 9 points are achievable with Read/Grep/Glob/Edit/Write alone, no Bash-dependent step remains. Out of Scope now explicitly excludes venv creation, dependency install, and test execution as a documented manual owner follow-up, closing the earlier P13 environment-decision gap rather than leaving it for the programmer to invent. Fresh-filesystem verification of Current State's claims: project/ contains only the placeholder README.md; source/project/ contains exactly the 9 items Point 9 enumerates (verified via Glob); project/tests/ does not yet exist (Point 6 correctly creates it); root .gitignore has no config.toml entry and already has an unanchored .venv/ pattern; root requirements.txt lacks openpyxl/pandas/requests/streamlit, which are confirmed real imports in send_sms.py/main.py/streamlit_app.py and declared in source/project/pyproject.toml. risk_level 'standard' independently re-verified against decision 7's criteria: config.example.toml (read directly) contains placeholder-only values, SESSION_2026-04-10.md (read directly) contains no personal/real data, and tests/test_send_sms.py (read directly) uses a FakeClient with no real network calls — no escalation warranted. Out of Scope is explicit and complete: source/ untouched, project/README.md untouched (deferred to Contract 0001's revision), no project/.gitignore, no behavior changes. Point 8's root-.gitignore edit is correctly scoped as its own explicit point per ADR-022's 'a change outside project/ needs its own contract point' rule. No backward-compatibility issue (project/ was an empty placeholder). Both prior review-round lessons are already recorded in memory/DECISIONS.md (2026-08-18T11:49:50+02:00 and 2026-08-18T12:05:37+02:00 entries) — no duplicate entry needed. The contract is complete, actionable, verifiable, and within the programmer's actual tool access; it may proceed to implementation."
     }
   ],
-  "completion_notes": "",
+  "completion_notes": "Migrated the SMS gateway application from the read-only source/project/ reference into project/ via verbatim Read+Write copies (no Bash tool available, consistent with the programmer's 'edit' permission profile). Created project/send_sms.py, project/main.py, project/streamlit_app.py, project/pyproject.toml, project/config.example.toml, project/tests/test_send_sms.py, and project/SESSION_2026_04_10.md (renamed from the hyphenated source name per ADR-008). Added a single 'config.toml' line to the repository root .gitignore, appended after the existing .discovery/ line with all prior lines preserved unaltered. Verified via Glob that source/project/ still contains exactly its original 9 items and that source/ outside source/project/ is untouched. No environment setup, dependency installation, or test execution was attempted — these remain explicit manual follow-ups for the owner per the contract's Out of Scope section, since the programmer has no Bash tool access.",
   "implementation_review_rounds": []
 }
 CONTRACT-META -->

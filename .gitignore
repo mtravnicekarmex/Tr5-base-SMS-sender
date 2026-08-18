@@ -8,3 +8,4 @@ agents/*/runtime/*
 !agents/*/runtime/.gitkeep
 agents/*/logs/
 .discovery/
+config.toml
