@@ -22,6 +22,11 @@ here. The project's original source, prior to migration, lives in
   detection), the `SmsGatewayClient` used to talk to the SMS gateway, and
   safe in-place Excel writes (temp file + atomic replace, with an optional
   timestamped backup copy).
+- Concurrent saves to the shared Excel workbook are detected and safely
+  rejected, not silently overwritten: `save_sheet_numbers()` creates a
+  sidecar `<workbook>.lock` file before reading the workbook, and any
+  overlapping save attempt fails with a clear error instead of racing the
+  first one.
 - `main.py` — command-line interface with six subcommands: `send`
   (send one SMS to an arbitrary number), `send-batch` (send ADD commands
   from a gate sheet), `supplement` (send ADD commands from the "Doplnit"
@@ -63,8 +68,9 @@ root `.gitignore`'s `config.toml` entry.
 
 - No automated tests exist for `main.py` (CLI argument parsing / exit
   codes) or for `streamlit_app.py`.
-- No file locking protects concurrent writes to the shared Excel workbook
-  when multiple users save through the Streamlit editor at the same time.
+- A `<workbook>.lock` file left behind by a process that crashes mid-save
+  is not automatically cleared (no staleness/TTL recovery); such a lock
+  would need to be removed manually before further saves can succeed.
 - CLI commands do not expose a `--timeout` option, unlike the Streamlit UI.
 - The phone number column layout is assumed uniform across all configured
   gate sheets, via a single global column-index constant.

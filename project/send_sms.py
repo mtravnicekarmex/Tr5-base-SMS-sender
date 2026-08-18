@@ -426,58 +426,70 @@ def save_sheet_numbers(
     if not workbook_path.exists():
         raise SpreadsheetError(f"Spreadsheet '{workbook_path}' was not found.")
 
-    if create_backup:
-        backup_path = create_backup_copy(workbook_path)
-
+    lock_path = workbook_path.with_name(f"{workbook_path.name}.lock")
     try:
-        workbook = load_workbook(BytesIO(workbook_path.read_bytes()))
-    except FileNotFoundError as exc:
-        raise SpreadsheetError(f"Spreadsheet '{workbook_path}' was not found.") from exc
-    except OSError as exc:
-        raise SpreadsheetError(f"Spreadsheet '{workbook_path}' could not be opened: {exc}") from exc
-
-    try:
-        worksheet = workbook[sheet_name]
-    except KeyError as exc:
-        raise SpreadsheetError(f"Sheet '{sheet_name}' was not found in '{workbook_path}'.") from exc
-
-    target_column = column_index + 1
-    max_rows_to_touch = max(worksheet.max_row or 0, len(numbers), 1)
-    for row_index in range(1, max_rows_to_touch + 1):
-        value = numbers[row_index - 1] if row_index <= len(numbers) else None
-        worksheet.cell(row=row_index, column=target_column).value = value
-
-    temp_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            delete=False,
-            suffix=workbook_path.suffix,
-            dir=workbook_path.parent,
-        ) as temp_file:
-            temp_path = Path(temp_file.name)
-
-        workbook.save(temp_path)
-        workbook.close()
-        temp_path.replace(workbook_path)
-    except PermissionError as exc:
+        lock_handle = open(lock_path, "x")
+        lock_handle.close()
+    except FileExistsError as exc:
         raise SpreadsheetError(
-            f"Spreadsheet '{workbook_path}' could not be saved. It may be open in Excel."
+            f"A save to '{workbook_path}' is already in progress. Please try again shortly."
         ) from exc
-    except OSError as exc:
-        raise SpreadsheetError(f"Spreadsheet '{workbook_path}' could not be saved: {exc}") from exc
-    finally:
-        workbook.close()
-        del workbook
-        gc.collect()
-        if temp_path and temp_path.exists():
-            temp_path.unlink(missing_ok=True)
 
-    return SheetSaveResult(
-        sheet_name=sheet_name,
-        rows_written=len(numbers),
-        numbers=numbers,
-        backup_path=backup_path,
-    )
+    try:
+        if create_backup:
+            backup_path = create_backup_copy(workbook_path)
+
+        try:
+            workbook = load_workbook(BytesIO(workbook_path.read_bytes()))
+        except FileNotFoundError as exc:
+            raise SpreadsheetError(f"Spreadsheet '{workbook_path}' was not found.") from exc
+        except OSError as exc:
+            raise SpreadsheetError(f"Spreadsheet '{workbook_path}' could not be opened: {exc}") from exc
+
+        try:
+            worksheet = workbook[sheet_name]
+        except KeyError as exc:
+            raise SpreadsheetError(f"Sheet '{sheet_name}' was not found in '{workbook_path}'.") from exc
+
+        target_column = column_index + 1
+        max_rows_to_touch = max(worksheet.max_row or 0, len(numbers), 1)
+        for row_index in range(1, max_rows_to_touch + 1):
+            value = numbers[row_index - 1] if row_index <= len(numbers) else None
+            worksheet.cell(row=row_index, column=target_column).value = value
+
+        temp_path: Path | None = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                delete=False,
+                suffix=workbook_path.suffix,
+                dir=workbook_path.parent,
+            ) as temp_file:
+                temp_path = Path(temp_file.name)
+
+            workbook.save(temp_path)
+            workbook.close()
+            temp_path.replace(workbook_path)
+        except PermissionError as exc:
+            raise SpreadsheetError(
+                f"Spreadsheet '{workbook_path}' could not be saved. It may be open in Excel."
+            ) from exc
+        except OSError as exc:
+            raise SpreadsheetError(f"Spreadsheet '{workbook_path}' could not be saved: {exc}") from exc
+        finally:
+            workbook.close()
+            del workbook
+            gc.collect()
+            if temp_path and temp_path.exists():
+                temp_path.unlink(missing_ok=True)
+
+        return SheetSaveResult(
+            sheet_name=sheet_name,
+            rows_written=len(numbers),
+            numbers=numbers,
+            backup_path=backup_path,
+        )
+    finally:
+        lock_path.unlink(missing_ok=True)
 
 
 def create_backup_copy(workbook_path: Path) -> Path:

@@ -10,6 +10,7 @@ from openpyxl import Workbook, load_workbook
 
 from send_sms import (
     SmsResult,
+    SpreadsheetError,
     analyze_sheet,
     analyze_phone_numbers,
     build_add_messages,
@@ -177,6 +178,137 @@ class SendSmsTests(unittest.TestCase):
             self.assertEqual(analysis.unique_numbers, ["+420777530100", "+420602191729"])
             del analysis
             gc.collect()
+
+    def test_save_sheet_numbers_removes_lock_after_success(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            workbook_path = temp_path / "gates.xlsx"
+            workbook = Workbook()
+            worksheet = workbook.active
+            worksheet.title = "Gate 1"
+            worksheet.cell(row=1, column=2).value = "old1"
+            workbook.save(workbook_path)
+            workbook.close()
+            del workbook
+            gc.collect()
+
+            config_path = temp_path / "config.toml"
+            config_path.write_text(
+                "\n".join(
+                    [
+                        'gateway_base = "http://localhost:8080"',
+                        f'excel_path = "{workbook_path.as_posix()}"',
+                        "",
+                        "[[gates]]",
+                        "id = 1",
+                        'phone = "+420601060959"',
+                        'password = "2803"',
+                        'sheet = "Gate 1"',
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            config = load_config(config_path)
+            save_sheet_numbers(
+                config,
+                "Gate 1",
+                column_index=1,
+                values=["777530100"],
+            )
+
+            lock_path = workbook_path.with_name(f"{workbook_path.name}.lock")
+            self.assertFalse(lock_path.exists())
+
+    def test_save_sheet_numbers_rejects_when_lock_file_present(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            workbook_path = temp_path / "gates.xlsx"
+            workbook = Workbook()
+            worksheet = workbook.active
+            worksheet.title = "Gate 1"
+            worksheet.cell(row=1, column=2).value = "old1"
+            workbook.save(workbook_path)
+            workbook.close()
+            del workbook
+            gc.collect()
+
+            config_path = temp_path / "config.toml"
+            config_path.write_text(
+                "\n".join(
+                    [
+                        'gateway_base = "http://localhost:8080"',
+                        f'excel_path = "{workbook_path.as_posix()}"',
+                        "",
+                        "[[gates]]",
+                        "id = 1",
+                        'phone = "+420601060959"',
+                        'password = "2803"',
+                        'sheet = "Gate 1"',
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            config = load_config(config_path)
+            original_bytes = workbook_path.read_bytes()
+
+            lock_path = workbook_path.with_name(f"{workbook_path.name}.lock")
+            lock_path.write_text("", encoding="utf-8")
+
+            with self.assertRaises(SpreadsheetError):
+                save_sheet_numbers(
+                    config,
+                    "Gate 1",
+                    column_index=1,
+                    values=["777530100"],
+                )
+
+            self.assertEqual(workbook_path.read_bytes(), original_bytes)
+            self.assertTrue(lock_path.exists())
+
+    def test_save_sheet_numbers_removes_lock_after_unrelated_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            workbook_path = temp_path / "gates.xlsx"
+            workbook = Workbook()
+            worksheet = workbook.active
+            worksheet.title = "Gate 1"
+            worksheet.cell(row=1, column=2).value = "old1"
+            workbook.save(workbook_path)
+            workbook.close()
+            del workbook
+            gc.collect()
+
+            config_path = temp_path / "config.toml"
+            config_path.write_text(
+                "\n".join(
+                    [
+                        'gateway_base = "http://localhost:8080"',
+                        f'excel_path = "{workbook_path.as_posix()}"',
+                        "",
+                        "[[gates]]",
+                        "id = 1",
+                        'phone = "+420601060959"',
+                        'password = "2803"',
+                        'sheet = "Gate 1"',
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            config = load_config(config_path)
+
+            with self.assertRaises(SpreadsheetError):
+                save_sheet_numbers(
+                    config,
+                    "Nonexistent Sheet",
+                    column_index=1,
+                    values=["777530100"],
+                )
+
+            lock_path = workbook_path.with_name(f"{workbook_path.name}.lock")
+            self.assertFalse(lock_path.exists())
 
 
 if __name__ == "__main__":
