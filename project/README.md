@@ -2,28 +2,78 @@
 
 ## Purpose
 
-Holds the actual application code for the project this clone of Tr5-base
-was set up for — kept separate from the agentic framework/governance layer
-that lives at the repository root (`chat_architect.py`, `agents/agent.py`,
-`agents/agent_profile.py`, `agents/contract_workflow.py`,
-`agents/git_ops.py`, `agents/pipeline.py`, `agents/voice.py`,
-`agents/<name>/`, `tools/discovery_engine/`, `templates/voice_module/`,
-`memory/`, `contracts/`, `AGENTS.md`, `PRINCIPLES.md`). Every implementation
-contract's actual code changes land here. When migrating an existing
-project, its original source lives in `source/` (untouched, read-only
-reference) — see ADR-024.
+Holds the actual, migrated application code for the SMS gateway helper
+project: a CLI and Streamlit tool for managing GSM gate phone number lists
+over an SMS gateway (adding, finding, and de-duplicating numbers stored in
+Excel gate sheets). This directory is kept separate from the agentic
+framework/governance layer that lives at the repository root
+(`chat_architect.py`, `agents/agent.py`, `agents/agent_profile.py`,
+`agents/contract_workflow.py`, `agents/git_ops.py`, `agents/pipeline.py`,
+`agents/voice.py`, `agents/<name>/`, `tools/discovery_engine/`,
+`templates/voice_module/`, `memory/`, `contracts/`, `AGENTS.md`,
+`PRINCIPLES.md`). Every implementation contract's actual code changes land
+here. The project's original source, prior to migration, lives in
+`source/` (untouched, read-only reference) — see ADR-024.
 
 ## Current capabilities (v0.1)
 
-- Directory exists. No project code yet — this is Tr5-base's own "point
-  zero" state, the starting point copied for each new project.
+- `send_sms.py` — core logic: TOML config loading, phone number
+  normalization/validation, sheet analysis (duplicate and invalid row
+  detection), the `SmsGatewayClient` used to talk to the SMS gateway, and
+  safe in-place Excel writes (temp file + atomic replace, with an optional
+  timestamped backup copy).
+- `main.py` — command-line interface with six subcommands: `send`
+  (send one SMS to an arbitrary number), `send-batch` (send ADD commands
+  from a gate sheet), `supplement` (send ADD commands from the "Doplnit"
+  sheet), `find-one` (send one FIND command), `find-sheet` (send FIND
+  commands for all numbers in a sheet), and `duplicates` (list duplicate
+  phone numbers in a gate sheet).
+- `streamlit_app.py` — web UI: sheet overview, an inline editor that saves
+  changes back to the Excel workbook, batch ADD/FIND operations, one-off
+  SMS sending, and data quality checks.
+- `tests/test_send_sms.py` — unit tests for the core logic in
+  `send_sms.py`; the full suite (8 tests) has been confirmed passing by
+  the owner after installing dependencies.
+- `config.example.toml` — configuration template for the gateway
+  credentials and gate sheet definitions.
+
+### Development environment
+
+`project/.venv` is a project-scoped Python virtual environment, separate
+from the repository's root framework environment (which holds
+`openai-codex`, `claude-agent-sdk`, `python-dotenv`, `pytest`, `pyaudio`,
+`google-genai`). It is gitignored (covered by the root `.gitignore`'s
+existing unanchored `.venv/` pattern) rather than a versioned deliverable,
+and was created and populated manually by the project owner — the
+programmer agent has no shell access to do this itself. Its dependencies
+(`openpyxl`, `pandas`, `requests`, `streamlit`) come from
+`project/pyproject.toml`. Example usage on Windows:
+
+```
+project\.venv\Scripts\python.exe -m pip install openpyxl pandas requests streamlit
+project\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Running the application for real also requires a local
+`project/config.toml`, copied from `config.example.toml` and filled in
+with real gateway/gate details; `config.toml` is itself gitignored per the
+root `.gitignore`'s `config.toml` entry.
 
 ## Current limitations
 
-- Empty until the first contract is implemented against a real project.
+- No automated tests exist for `main.py` (CLI argument parsing / exit
+  codes) or for `streamlit_app.py`.
+- No file locking protects concurrent writes to the shared Excel workbook
+  when multiple users save through the Streamlit editor at the same time.
+- CLI commands do not expose a `--timeout` option, unlike the Streamlit UI.
+- The phone number column layout is assumed uniform across all configured
+  gate sheets, via a single global column-index constant.
 
 ## Planned evolution
 
-- Grows as contracts are implemented. Internal structure (e.g. a backend/
-  frontend split) is decided when a real project actually needs it, not in
+- Grows as further contracts are implemented. Resolving the limitations
+  listed above — concurrent-write protection, CLI/UI parameter parity,
+  per-gate column configuration, and additional test coverage — is
+  deferred to those future contracts, not addressed here. Internal
+  structure is decided when a real need for it actually arises, not in
   advance (see `PRINCIPLES.md` P1, P15).
