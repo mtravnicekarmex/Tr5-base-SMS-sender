@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0003
 
-Status: READY_FOR_REVIEWER
+Status: APPROVED
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_REVIEWER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `reviewer`
-- Handed off to: `reviewer`
+- Currently with: `owner`
+- Handed off to: `owner`
 - Created at: `2026-08-18T15:08:37+02:00`
-- Updated at: `2026-08-18T15:12:44+02:00`
+- Updated at: `2026-08-18T15:14:56+02:00`
 
 ---
 
@@ -65,7 +65,7 @@ Acceptance criteria:
 - If the lock file already exists (FileExistsError on exclusive creation), save_sheet_numbers() raises SpreadsheetError with a message stating a save is already in progress, and workbook_path.read_bytes()/load_workbook() and the temp-file write are never reached
 - If the lock file did not previously exist, save_sheet_numbers() proceeds through its existing read/modify/write logic (backup creation, column update loop, temp file + atomic replace) unchanged
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -81,7 +81,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:14:56+02:00._
+
+Verified in project/send_sms.py lines 422-436: lock_path = workbook_path.with_name(f"{workbook_path.name}.lock") computed in the workbook's own directory (matches 'gates.xlsx' -> 'gates.xlsx.lock' example). The exclusive open(lock_path, "x") happens at line 431, strictly before workbook_path.read_bytes()/load_workbook() at line 443 — satisfies the AC's literal ordering requirement (the pre-existing workbook_path.exists() stat check at line 426 is metadata-only, not a read, and the architecture review's round-1 note #9 already flagged this ordering nuance as non-blocking). On FileExistsError, lines 433-436 raise SpreadsheetError("A save to '{workbook_path}' is already in progress. Please try again shortly.") and return immediately — no read_bytes/load_workbook/temp-write is reached, confirmed by control flow (the raise exits the function before the second try block that contains all of that logic). When lock creation succeeds, execution falls through unchanged into the existing backup/read/modify/write logic (now nested in try/finally, but the logic itself — backup creation, load_workbook, column update loop, temp file + atomic replace, SheetSaveResult return — is unaltered).
 
 ## Point 2
 
@@ -93,7 +95,7 @@ Acceptance criteria:
 - After a call to save_sheet_numbers() that fails for a reason unrelated to locking (e.g. the target sheet name is not found in the workbook), the lock file no longer exists on disk
 - When save_sheet_numbers() rejects a call because the lock file already existed (per the previous point), that pre-existing lock file is left in place, not deleted, by the rejecting call
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -109,7 +111,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:14:56+02:00._
+
+Verified the outer try (send_sms.py line 438) covers backup creation, load_workbook, worksheet lookup, the column update loop, the temp-file save/replace, and the SheetSaveResult return, with a matching finally at line 491-492 that unconditionally calls lock_path.unlink(missing_ok=True). This finally runs on the success return path, on SpreadsheetError raised for a missing sheet (worksheet lookup KeyError at line 451-452), and on PermissionError/OSError translated to SpreadsheetError during the temp-file save/replace (lines 472-477) — all propagate up through the same try, hitting the same finally. The rejection branch (FileExistsError on lock creation, lines 433-436) raises from inside the earlier, separate try/except (lines 430-436), before the try/finally at 438/491 is ever entered — so a pre-existing lock detected by a rejecting call is structurally never unlinked by that call. Confirmed directly by the new test test_save_sheet_numbers_rejects_when_lock_file_present, which asserts the pre-created lock file still exists after the rejected call.
 
 ## Point 3
 
@@ -123,7 +127,7 @@ Acceptance criteria:
 - Reading the 'removes_lock_after_unrelated_failure' test confirms it triggers an existing unrelated failure path (e.g. a sheet_name that does not exist in the workbook), asserts a SpreadsheetError is raised, and asserts the '<workbook>.lock' file does not exist afterward
 - Actually executing the full test suite (11 tests total after this addition) and confirming all pass is explicitly left as a manual follow-up for the owner, per this contract's Out of Scope, since the programmer has no Bash access to run it
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -139,7 +143,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:14:56+02:00._
+
+Three new, distinctly named test methods added to project/tests/test_send_sms.py (test_save_sheet_numbers_removes_lock_after_success, test_save_sheet_numbers_rejects_when_lock_file_present, test_save_sheet_numbers_removes_lock_after_unrelated_failure), each using the same tempfile.TemporaryDirectory()-based real openpyxl workbook + real config.toml fixture pattern as the existing test (no mocked filesystem). 'removes_lock_after_success' performs a normal save then asserts lock_path.exists() is False. 'rejects_when_lock_file_present' pre-creates the lock file via write_text, calls save_sheet_numbers(), asserts SpreadsheetError is raised, asserts workbook_path.read_bytes() is byte-identical to the pre-call snapshot, and additionally asserts the pre-existing lock file is still present. 'removes_lock_after_unrelated_failure' calls save_sheet_numbers() with sheet_name='Nonexistent Sheet' (absent from the workbook), asserts SpreadsheetError is raised, and asserts the lock file does not exist afterward. SpreadsheetError was correctly added to the test file's import block. Counting the test file confirms 8 pre-existing + 3 new = 11 test methods, matching the contract's stated total; actual execution remains an explicit manual owner follow-up per this contract's Out of Scope, which is consistent with the programmer's 'edit'-only permission profile (no Bash tool).
 
 ## Point 4
 
@@ -150,7 +156,7 @@ Acceptance criteria:
 - The new bullet does not claim to solve stale-lock recovery or any form of multi-writer merge
 - No existing bullet in 'Current capabilities (v0.1)' is removed or altered by this point
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -166,7 +172,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:14:56+02:00._
+
+project/README.md's 'Current capabilities (v0.1)' section (lines 25-29) now contains a new bullet immediately after the send_sms.py bullet, stating that concurrent saves are 'detected and safely rejected, not silently overwritten' via a sidecar '<workbook>.lock' file created before the workbook is read, and that an overlapping save 'fails with a clear error instead of racing the first one.' The bullet makes no claim about stale-lock recovery or multi-writer merge. All other bullets in the section (send_sms.py, main.py, streamlit_app.py, tests/test_send_sms.py, config.example.toml) are present and textually unchanged from before this contract.
 
 ## Point 5
 
@@ -177,7 +185,7 @@ Acceptance criteria:
 - The 'Current limitations' section contains a new bullet specifically about stale-lock recovery not being automatic, as described above
 - The other three limitations bullets (missing CLI/UI test coverage, no CLI --timeout parity, the single global phone-column-index assumption) remain present and unaltered
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -193,7 +201,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T15:14:56+02:00._
+
+project/README.md's 'Current limitations' section (lines 69-76) no longer contains the original 'no file locking for concurrent writes' bullet; it has been replaced with a new bullet (lines 71-73) stating a '<workbook>.lock' file left behind by a crashed process is not automatically cleared (no staleness/TTL recovery) and would need manual removal — matching the point's required wording exactly. The other three limitations bullets (missing CLI/UI test coverage, no CLI --timeout parity, single global phone-column-index assumption) remain present and unaltered, confirmed by direct comparison. Minor, non-blocking observation (already flagged by the programmer in the completion note for transparency, not silently hidden): the 'tests/test_send_sms.py (8 tests)' capabilities bullet and the 'Planned evolution' section's mention of 'concurrent-write protection' as an unresolved limitation are now stale given this contract's resolution and the new 11-test suite, but neither was named by this contract's points (only two specific bullets were in scope), so leaving them untouched is the correct call under P13/Out-of-Scope discipline rather than a defect — worth a future light-touch fix, not a reason to request changes here.
 
 ---
 
@@ -251,7 +261,11 @@ Implemented atomic file-based lock detection in save_sheet_numbers() (project/se
 
 # Implementation Review
 
-_Awaiting implementation review._
+### Round 1 — 2026-08-18T15:14:56+02:00 — Verdict: APPROVED — Reviewer: `reviewer`
+
+All five points are correctly and completely implemented as accepted in the architecture review. project/send_sms.py's save_sheet_numbers() now creates an exclusive sidecar '<workbook>.lock' file (open(lock_path, "x")) before any read_bytes()/load_workbook() call, raises SpreadsheetError with a clear 'already in progress' message on FileExistsError without touching the workbook, and guarantees lock cleanup via a try/finally wrapped around the entire read/modify/write body — while the rejection branch (which raises before that try/finally is entered) never deletes a lock it did not create. Three new tests in project/tests/test_send_sms.py follow the existing tempfile/openpyxl real-fixture pattern and correctly assert success-path cleanup, rejection-with-unchanged-bytes-and-preserved-lock, and cleanup-after-an-unrelated-failure (nonexistent sheet). project/README.md was updated exactly as specified: a new 'Current capabilities' bullet describing the lock mechanism (making no claim about stale-lock recovery or merge), and the old 'no file locking' limitation bullet replaced with the narrower stale-lock bullet, leaving the other three limitations bullets untouched. project/streamlit_app.py was verified, not modified, and its existing try/except SpreadsheetError/st.error() path already surfaces the new rejection. No new third-party dependency, no public signature/return-type change, no file touched outside the three named files.
+
+Out of Scope check: OK — Discovery diff listed 5 changed paths. project/send_sms.py, project/tests/test_send_sms.py, and project/README.md are exactly the three files this contract's Outputs/Out-of-Scope sections permit, and their content changes map precisely to points 1-5 with no unrelated edits found by reading the full files. The other two changed paths — agents/architect/WORKING_STATE.md and agents/programmer/runtime/session.log — are framework-generated artifacts, not manual programmer edits beyond the contract: WORKING_STATE.md's own header states it is 'Generated automatically from the live contract queue on every state change... do not edit by hand,' and its content is just the queue's current status line for this contract; session.log is an append-only tool-invocation log whose tail (Read/Edit calls on send_sms.py, test_send_sms.py x2, README.md x2 around 15:10-15:12) exactly matches the actual edits made and nothing more. Additionally verified project/streamlit_app.py was read but not modified (not in the diff list, and its existing try/except SpreadsheetError/st.error() block at lines 420-429 already correctly surfaces the new rejection, confirming the contract's claim it needed no change) and confirmed no new dependency or gitignore change was introduced (the lock file is a runtime sidecar next to the network-share workbook, outside the repo, so P5 does not apply). No scope creep found.
 
 ---
 
@@ -265,12 +279,12 @@ _Not filled in._
 {
   "number": 3,
   "title": "Detect and reject concurrent writes to the shared Excel workbook",
-  "status": "READY_FOR_REVIEWER",
+  "status": "APPROVED",
   "created_by": "architect",
-  "assigned_to": "reviewer",
-  "handoff_to": "reviewer",
+  "assigned_to": "owner",
+  "handoff_to": "owner",
   "created_at": "2026-08-18T15:08:37+02:00",
-  "updated_at": "2026-08-18T15:12:44+02:00",
+  "updated_at": "2026-08-18T15:14:56+02:00",
   "points": [
     {
       "number": 1,
@@ -290,10 +304,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — the programmer's Claude permission_profile ('edit': Read/Grep/Glob/Edit/Write) has no Bash tool, per this contract's explicit Out of Scope and the IMPLEMENTATION_CONTRACT_0002 precedent. Correctness of the new tests and the locking implementation was verified by reading and manually tracing the code paths (lock creation ordering, try/finally cleanup scope, FileExistsError rejection branch). Running the full suite (python -m unittest discover -s tests -v inside project/.venv, 11 tests total) and confirming all pass is an explicit manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Verified in project/send_sms.py lines 422-436: lock_path = workbook_path.with_name(f\"{workbook_path.name}.lock\") computed in the workbook's own directory (matches 'gates.xlsx' -> 'gates.xlsx.lock' example). The exclusive open(lock_path, \"x\") happens at line 431, strictly before workbook_path.read_bytes()/load_workbook() at line 443 — satisfies the AC's literal ordering requirement (the pre-existing workbook_path.exists() stat check at line 426 is metadata-only, not a read, and the architecture review's round-1 note #9 already flagged this ordering nuance as non-blocking). On FileExistsError, lines 433-436 raise SpreadsheetError(\"A save to '{workbook_path}' is already in progress. Please try again shortly.\") and return immediately — no read_bytes/load_workbook/temp-write is reached, confirmed by control flow (the raise exits the function before the second try block that contains all of that logic). When lock creation succeeds, execution falls through unchanged into the existing backup/read/modify/write logic (now nested in try/finally, but the logic itself — backup creation, load_workbook, column update loop, temp file + atomic replace, SheetSaveResult return — is unaltered).",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:14:56+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 2,
@@ -313,10 +327,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — the programmer's Claude permission_profile ('edit': Read/Grep/Glob/Edit/Write) has no Bash tool, per this contract's explicit Out of Scope and the IMPLEMENTATION_CONTRACT_0002 precedent. Correctness of the new tests and the locking implementation was verified by reading and manually tracing the code paths (lock creation ordering, try/finally cleanup scope, FileExistsError rejection branch). Running the full suite (python -m unittest discover -s tests -v inside project/.venv, 11 tests total) and confirming all pass is an explicit manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Verified the outer try (send_sms.py line 438) covers backup creation, load_workbook, worksheet lookup, the column update loop, the temp-file save/replace, and the SheetSaveResult return, with a matching finally at line 491-492 that unconditionally calls lock_path.unlink(missing_ok=True). This finally runs on the success return path, on SpreadsheetError raised for a missing sheet (worksheet lookup KeyError at line 451-452), and on PermissionError/OSError translated to SpreadsheetError during the temp-file save/replace (lines 472-477) — all propagate up through the same try, hitting the same finally. The rejection branch (FileExistsError on lock creation, lines 433-436) raises from inside the earlier, separate try/except (lines 430-436), before the try/finally at 438/491 is ever entered — so a pre-existing lock detected by a rejecting call is structurally never unlinked by that call. Confirmed directly by the new test test_save_sheet_numbers_rejects_when_lock_file_present, which asserts the pre-created lock file still exists after the rejected call.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:14:56+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 3,
@@ -338,10 +352,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — the programmer's Claude permission_profile ('edit': Read/Grep/Glob/Edit/Write) has no Bash tool, per this contract's explicit Out of Scope and the IMPLEMENTATION_CONTRACT_0002 precedent. Correctness of the new tests and the locking implementation was verified by reading and manually tracing the code paths (lock creation ordering, try/finally cleanup scope, FileExistsError rejection branch). Running the full suite (python -m unittest discover -s tests -v inside project/.venv, 11 tests total) and confirming all pass is an explicit manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Three new, distinctly named test methods added to project/tests/test_send_sms.py (test_save_sheet_numbers_removes_lock_after_success, test_save_sheet_numbers_rejects_when_lock_file_present, test_save_sheet_numbers_removes_lock_after_unrelated_failure), each using the same tempfile.TemporaryDirectory()-based real openpyxl workbook + real config.toml fixture pattern as the existing test (no mocked filesystem). 'removes_lock_after_success' performs a normal save then asserts lock_path.exists() is False. 'rejects_when_lock_file_present' pre-creates the lock file via write_text, calls save_sheet_numbers(), asserts SpreadsheetError is raised, asserts workbook_path.read_bytes() is byte-identical to the pre-call snapshot, and additionally asserts the pre-existing lock file is still present. 'removes_lock_after_unrelated_failure' calls save_sheet_numbers() with sheet_name='Nonexistent Sheet' (absent from the workbook), asserts SpreadsheetError is raised, and asserts the lock file does not exist afterward. SpreadsheetError was correctly added to the test file's import block. Counting the test file confirms 8 pre-existing + 3 new = 11 test methods, matching the contract's stated total; actual execution remains an explicit manual owner follow-up per this contract's Out of Scope, which is consistent with the programmer's 'edit'-only permission profile (no Bash tool).",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:14:56+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 4,
@@ -360,10 +374,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — the programmer's Claude permission_profile ('edit': Read/Grep/Glob/Edit/Write) has no Bash tool, per this contract's explicit Out of Scope and the IMPLEMENTATION_CONTRACT_0002 precedent. Correctness of the new tests and the locking implementation was verified by reading and manually tracing the code paths (lock creation ordering, try/finally cleanup scope, FileExistsError rejection branch). Running the full suite (python -m unittest discover -s tests -v inside project/.venv, 11 tests total) and confirming all pass is an explicit manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "project/README.md's 'Current capabilities (v0.1)' section (lines 25-29) now contains a new bullet immediately after the send_sms.py bullet, stating that concurrent saves are 'detected and safely rejected, not silently overwritten' via a sidecar '<workbook>.lock' file created before the workbook is read, and that an overlapping save 'fails with a clear error instead of racing the first one.' The bullet makes no claim about stale-lock recovery or multi-writer merge. All other bullets in the section (send_sms.py, main.py, streamlit_app.py, tests/test_send_sms.py, config.example.toml) are present and textually unchanged from before this contract.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:14:56+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 5,
@@ -382,10 +396,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — the programmer's Claude permission_profile ('edit': Read/Grep/Glob/Edit/Write) has no Bash tool, per this contract's explicit Out of Scope and the IMPLEMENTATION_CONTRACT_0002 precedent. Correctness of the new tests and the locking implementation was verified by reading and manually tracing the code paths (lock creation ordering, try/finally cleanup scope, FileExistsError rejection branch). Running the full suite (python -m unittest discover -s tests -v inside project/.venv, 11 tests total) and confirming all pass is an explicit manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "project/README.md's 'Current limitations' section (lines 69-76) no longer contains the original 'no file locking for concurrent writes' bullet; it has been replaced with a new bullet (lines 71-73) stating a '<workbook>.lock' file left behind by a crashed process is not automatically cleared (no staleness/TTL recovery) and would need manual removal — matching the point's required wording exactly. The other three limitations bullets (missing CLI/UI test coverage, no CLI --timeout parity, single global phone-column-index assumption) remain present and unaltered, confirmed by direct comparison. Minor, non-blocking observation (already flagged by the programmer in the completion note for transparency, not silently hidden): the 'tests/test_send_sms.py (8 tests)' capabilities bullet and the 'Planned evolution' section's mention of 'concurrent-write protection' as an unresolved limitation are now stale given this contract's resolution and the new 11-test suite, but neither was named by this contract's points (only two specific bullets were in scope), so leaving them untouched is the correct call under P13/Out-of-Scope discipline rather than a defect — worth a future light-touch fix, not a reason to request changes here.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T15:14:56+02:00",
+      "status": "APPROVED"
     }
   ],
   "implementer": "programmer",
@@ -409,6 +423,43 @@ _Not filled in._
     }
   ],
   "completion_notes": "Implemented atomic file-based lock detection in save_sheet_numbers() (project/send_sms.py) so an overlapping save fails loudly with SpreadsheetError instead of silently racing another writer, with guaranteed lock cleanup on every path except the rejection path itself. Added three new unit tests to project/tests/test_send_sms.py following the existing tempfile/openpyxl fixture pattern, and updated project/README.md to move the resolved concurrent-write limitation into 'Current capabilities' and add the narrower residual stale-lock limitation. project/streamlit_app.py was verified (not modified) — its existing try/except SpreadsheetError/st.error() path already surfaces the new rejection to users. The programmer has no Bash access (permission_profile 'edit'), so the new/full test suite (11 tests) was verified by reading and tracing logic against the implementation rather than executed; running it is a manual follow-up for the owner, per the contract's Out of Scope and the IMPLEMENTATION_CONTRACT_0002 precedent.",
-  "implementation_review_rounds": []
+  "implementation_review_rounds": [
+    {
+      "round": 1,
+      "date": "2026-08-18T15:14:56+02:00",
+      "verdict": "APPROVED",
+      "reviewer": "reviewer",
+      "summary": "All five points are correctly and completely implemented as accepted in the architecture review. project/send_sms.py's save_sheet_numbers() now creates an exclusive sidecar '<workbook>.lock' file (open(lock_path, \"x\")) before any read_bytes()/load_workbook() call, raises SpreadsheetError with a clear 'already in progress' message on FileExistsError without touching the workbook, and guarantees lock cleanup via a try/finally wrapped around the entire read/modify/write body — while the rejection branch (which raises before that try/finally is entered) never deletes a lock it did not create. Three new tests in project/tests/test_send_sms.py follow the existing tempfile/openpyxl real-fixture pattern and correctly assert success-path cleanup, rejection-with-unchanged-bytes-and-preserved-lock, and cleanup-after-an-unrelated-failure (nonexistent sheet). project/README.md was updated exactly as specified: a new 'Current capabilities' bullet describing the lock mechanism (making no claim about stale-lock recovery or merge), and the old 'no file locking' limitation bullet replaced with the narrower stale-lock bullet, leaving the other three limitations bullets untouched. project/streamlit_app.py was verified, not modified, and its existing try/except SpreadsheetError/st.error() path already surfaces the new rejection. No new third-party dependency, no public signature/return-type change, no file touched outside the three named files.",
+      "out_of_scope_ok": true,
+      "out_of_scope_findings": "Discovery diff listed 5 changed paths. project/send_sms.py, project/tests/test_send_sms.py, and project/README.md are exactly the three files this contract's Outputs/Out-of-Scope sections permit, and their content changes map precisely to points 1-5 with no unrelated edits found by reading the full files. The other two changed paths — agents/architect/WORKING_STATE.md and agents/programmer/runtime/session.log — are framework-generated artifacts, not manual programmer edits beyond the contract: WORKING_STATE.md's own header states it is 'Generated automatically from the live contract queue on every state change... do not edit by hand,' and its content is just the queue's current status line for this contract; session.log is an append-only tool-invocation log whose tail (Read/Edit calls on send_sms.py, test_send_sms.py x2, README.md x2 around 15:10-15:12) exactly matches the actual edits made and nothing more. Additionally verified project/streamlit_app.py was read but not modified (not in the diff list, and its existing try/except SpreadsheetError/st.error() block at lines 420-429 already correctly surfaces the new rejection, confirming the contract's claim it needed no change) and confirmed no new dependency or gitignore change was introduced (the lock file is a runtime sidecar next to the network-share workbook, outside the repo, so P5 does not apply). No scope creep found.",
+      "reviews": [
+        {
+          "point": 1,
+          "status": "APPROVED",
+          "review": "Verified in project/send_sms.py lines 422-436: lock_path = workbook_path.with_name(f\"{workbook_path.name}.lock\") computed in the workbook's own directory (matches 'gates.xlsx' -> 'gates.xlsx.lock' example). The exclusive open(lock_path, \"x\") happens at line 431, strictly before workbook_path.read_bytes()/load_workbook() at line 443 — satisfies the AC's literal ordering requirement (the pre-existing workbook_path.exists() stat check at line 426 is metadata-only, not a read, and the architecture review's round-1 note #9 already flagged this ordering nuance as non-blocking). On FileExistsError, lines 433-436 raise SpreadsheetError(\"A save to '{workbook_path}' is already in progress. Please try again shortly.\") and return immediately — no read_bytes/load_workbook/temp-write is reached, confirmed by control flow (the raise exits the function before the second try block that contains all of that logic). When lock creation succeeds, execution falls through unchanged into the existing backup/read/modify/write logic (now nested in try/finally, but the logic itself — backup creation, load_workbook, column update loop, temp file + atomic replace, SheetSaveResult return — is unaltered)."
+        },
+        {
+          "point": 2,
+          "status": "APPROVED",
+          "review": "Verified the outer try (send_sms.py line 438) covers backup creation, load_workbook, worksheet lookup, the column update loop, the temp-file save/replace, and the SheetSaveResult return, with a matching finally at line 491-492 that unconditionally calls lock_path.unlink(missing_ok=True). This finally runs on the success return path, on SpreadsheetError raised for a missing sheet (worksheet lookup KeyError at line 451-452), and on PermissionError/OSError translated to SpreadsheetError during the temp-file save/replace (lines 472-477) — all propagate up through the same try, hitting the same finally. The rejection branch (FileExistsError on lock creation, lines 433-436) raises from inside the earlier, separate try/except (lines 430-436), before the try/finally at 438/491 is ever entered — so a pre-existing lock detected by a rejecting call is structurally never unlinked by that call. Confirmed directly by the new test test_save_sheet_numbers_rejects_when_lock_file_present, which asserts the pre-created lock file still exists after the rejected call."
+        },
+        {
+          "point": 3,
+          "status": "APPROVED",
+          "review": "Three new, distinctly named test methods added to project/tests/test_send_sms.py (test_save_sheet_numbers_removes_lock_after_success, test_save_sheet_numbers_rejects_when_lock_file_present, test_save_sheet_numbers_removes_lock_after_unrelated_failure), each using the same tempfile.TemporaryDirectory()-based real openpyxl workbook + real config.toml fixture pattern as the existing test (no mocked filesystem). 'removes_lock_after_success' performs a normal save then asserts lock_path.exists() is False. 'rejects_when_lock_file_present' pre-creates the lock file via write_text, calls save_sheet_numbers(), asserts SpreadsheetError is raised, asserts workbook_path.read_bytes() is byte-identical to the pre-call snapshot, and additionally asserts the pre-existing lock file is still present. 'removes_lock_after_unrelated_failure' calls save_sheet_numbers() with sheet_name='Nonexistent Sheet' (absent from the workbook), asserts SpreadsheetError is raised, and asserts the lock file does not exist afterward. SpreadsheetError was correctly added to the test file's import block. Counting the test file confirms 8 pre-existing + 3 new = 11 test methods, matching the contract's stated total; actual execution remains an explicit manual owner follow-up per this contract's Out of Scope, which is consistent with the programmer's 'edit'-only permission profile (no Bash tool)."
+        },
+        {
+          "point": 4,
+          "status": "APPROVED",
+          "review": "project/README.md's 'Current capabilities (v0.1)' section (lines 25-29) now contains a new bullet immediately after the send_sms.py bullet, stating that concurrent saves are 'detected and safely rejected, not silently overwritten' via a sidecar '<workbook>.lock' file created before the workbook is read, and that an overlapping save 'fails with a clear error instead of racing the first one.' The bullet makes no claim about stale-lock recovery or multi-writer merge. All other bullets in the section (send_sms.py, main.py, streamlit_app.py, tests/test_send_sms.py, config.example.toml) are present and textually unchanged from before this contract."
+        },
+        {
+          "point": 5,
+          "status": "APPROVED",
+          "review": "project/README.md's 'Current limitations' section (lines 69-76) no longer contains the original 'no file locking for concurrent writes' bullet; it has been replaced with a new bullet (lines 71-73) stating a '<workbook>.lock' file left behind by a crashed process is not automatically cleared (no staleness/TTL recovery) and would need manual removal — matching the point's required wording exactly. The other three limitations bullets (missing CLI/UI test coverage, no CLI --timeout parity, single global phone-column-index assumption) remain present and unaltered, confirmed by direct comparison. Minor, non-blocking observation (already flagged by the programmer in the completion note for transparency, not silently hidden): the 'tests/test_send_sms.py (8 tests)' capabilities bullet and the 'Planned evolution' section's mention of 'concurrent-write protection' as an unresolved limitation are now stale given this contract's resolution and the new 11-test suite, but neither was named by this contract's points (only two specific bullets were in scope), so leaving them untouched is the correct call under P13/Out-of-Scope discipline rather than a defect — worth a future light-touch fix, not a reason to request changes here."
+        }
+      ]
+    }
+  ]
 }
 CONTRACT-META -->
