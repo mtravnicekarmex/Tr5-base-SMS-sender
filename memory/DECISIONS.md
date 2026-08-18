@@ -2216,3 +2216,7 @@ prints do not break them.
 **Verification**: `python -m pytest -q` — 133 total, 132 passed, 1
 pre-existing unrelated failure (`test_pyaudio_backend_real_import_and_
 lifecycle`, see ADR-038).
+
+## 2026-08-18T11:27:18+02:00 — IMPLEMENTATION_CONTRACT_0001
+
+Architecture review finding (IMPLEMENTATION_CONTRACT_0001, 2026-08-18): a drafted contract proposed rewriting source/project/README.md to document current app state. AGENTS.md/ADR-024 explicitly forbid editing anything under source/ (read-only migration reference; migrated/new code and its docs belong in project/ instead). Future architecture reviews should specifically check any contract touching a path under source/ against this rule before accepting.

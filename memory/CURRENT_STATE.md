@@ -21,6 +21,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
       - update_memory.md
     - runtime/
       - .gitkeep
+      - session.log
     - COMMANDS.md
     - INBOX.md
     - MEMORY.md
@@ -69,7 +70,85 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 - project/
   - README.md
 - source/
+  - agents/
+    - architect/
+      - commands/
+        - analyze_architecture.md
+        - create_contract.md
+        - delegate.md
+        - plan.md
+        - propose_change.md
+        - review_contract.md
+        - review_design.md
+        - summarize.md
+        - update_memory.md
+      - runtime/
+        - .gitkeep
+      - COMMANDS.md
+      - INBOX.md
+      - MEMORY.md
+      - ROLE.md
+      - WORKING_STATE.md
+      - config.json
+    - programmer/
+      - commands/
+        - implement_contract.md
+      - COMMANDS.md
+      - INBOX.md
+      - MEMORY.md
+      - ROLE.md
+      - WORKING_STATE.md
+      - config.json
+    - reviewer/
+      - commands/
+        - architecture_review.md
+      - runtime/
+        - .gitkeep
+      - COMMANDS.md
+      - INBOX.md
+      - MEMORY.md
+      - ROLE.md
+      - WORKING_STATE.md
+      - config.json
+    - __init__.py
+    - agent.py
+    - agent_profile.py
+    - contract_workflow.py
+    - git_ops.py
+    - pipeline.py
+  - contracts/
+    - .gitkeep
+    - README.md
+  - memory/
+    - CHANGE_LOG.md
+    - DECISIONS.md
+    - OPEN_TASKS.md
+    - PROJECT_STATE.md
+  - project/
+    - tests/
+      - test_send_sms.py
+    - .gitignore
+    - README.md
+    - SESSION_2026-04-10.md
+    - config.example.toml
+    - main.py
+    - pyproject.toml
+    - send_sms.py
+    - streamlit_app.py
+  - tests/
+    - test_agent_profile.py
+    - test_contract_workflow.py
+    - test_git_ops.py
+    - test_pipeline.py
+  - .env.example
+  - .gitignore
+  - AGENTS.md
+  - AGENTS_SUGGESTIONS.md
+  - PRINCIPLES.md
   - README.md
+  - UPDATE_NOTES.md
+  - chat_architect.py
+  - requirements.txt
 - templates/
   - voice_module/
     - README.md
@@ -139,6 +218,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 | config.json | agents/architect/config.json | Agent Config |
 | runtime | agents/architect/runtime | Directory |
 | .gitkeep | agents/architect/runtime/.gitkeep | Unknown |
+| session.log | agents/architect/runtime/session.log | Unknown |
 | contract_workflow.py | agents/contract_workflow.py | Python Source |
 | git_ops.py | agents/git_ops.py | Python Source |
 | pipeline.py | agents/pipeline.py | Python Source |
@@ -180,7 +260,85 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 | README.md | project/README.md | Markdown Document |
 | requirements.txt | requirements.txt | Unknown |
 | source | source | Directory |
+| .env.example | source/.env.example | Unknown |
+| .gitignore | source/.gitignore | Unknown |
+| AGENTS.md | source/AGENTS.md | Markdown Document |
+| AGENTS_SUGGESTIONS.md | source/AGENTS_SUGGESTIONS.md | Markdown Document |
+| PRINCIPLES.md | source/PRINCIPLES.md | Markdown Document |
 | README.md | source/README.md | Markdown Document |
+| UPDATE_NOTES.md | source/UPDATE_NOTES.md | Markdown Document |
+| agents | source/agents | Directory |
+| __init__.py | source/agents/__init__.py | Python Source |
+| agent.py | source/agents/agent.py | Python Source |
+| agent_profile.py | source/agents/agent_profile.py | Python Source |
+| architect | source/agents/architect | Directory |
+| COMMANDS.md | source/agents/architect/COMMANDS.md | Markdown Document |
+| INBOX.md | source/agents/architect/INBOX.md | Markdown Document |
+| MEMORY.md | source/agents/architect/MEMORY.md | Markdown Document |
+| ROLE.md | source/agents/architect/ROLE.md | Markdown Document |
+| WORKING_STATE.md | source/agents/architect/WORKING_STATE.md | Markdown Document |
+| commands | source/agents/architect/commands | Directory |
+| analyze_architecture.md | source/agents/architect/commands/analyze_architecture.md | Markdown Document |
+| create_contract.md | source/agents/architect/commands/create_contract.md | Markdown Document |
+| delegate.md | source/agents/architect/commands/delegate.md | Markdown Document |
+| plan.md | source/agents/architect/commands/plan.md | Markdown Document |
+| propose_change.md | source/agents/architect/commands/propose_change.md | Markdown Document |
+| review_contract.md | source/agents/architect/commands/review_contract.md | Markdown Document |
+| review_design.md | source/agents/architect/commands/review_design.md | Markdown Document |
+| summarize.md | source/agents/architect/commands/summarize.md | Markdown Document |
+| update_memory.md | source/agents/architect/commands/update_memory.md | Markdown Document |
+| config.json | source/agents/architect/config.json | JSON Document |
+| runtime | source/agents/architect/runtime | Directory |
+| .gitkeep | source/agents/architect/runtime/.gitkeep | Unknown |
+| contract_workflow.py | source/agents/contract_workflow.py | Python Source |
+| git_ops.py | source/agents/git_ops.py | Python Source |
+| pipeline.py | source/agents/pipeline.py | Python Source |
+| programmer | source/agents/programmer | Directory |
+| COMMANDS.md | source/agents/programmer/COMMANDS.md | Markdown Document |
+| INBOX.md | source/agents/programmer/INBOX.md | Markdown Document |
+| MEMORY.md | source/agents/programmer/MEMORY.md | Markdown Document |
+| ROLE.md | source/agents/programmer/ROLE.md | Markdown Document |
+| WORKING_STATE.md | source/agents/programmer/WORKING_STATE.md | Markdown Document |
+| commands | source/agents/programmer/commands | Directory |
+| implement_contract.md | source/agents/programmer/commands/implement_contract.md | Markdown Document |
+| config.json | source/agents/programmer/config.json | JSON Document |
+| reviewer | source/agents/reviewer | Directory |
+| COMMANDS.md | source/agents/reviewer/COMMANDS.md | Markdown Document |
+| INBOX.md | source/agents/reviewer/INBOX.md | Markdown Document |
+| MEMORY.md | source/agents/reviewer/MEMORY.md | Markdown Document |
+| ROLE.md | source/agents/reviewer/ROLE.md | Markdown Document |
+| WORKING_STATE.md | source/agents/reviewer/WORKING_STATE.md | Markdown Document |
+| commands | source/agents/reviewer/commands | Directory |
+| architecture_review.md | source/agents/reviewer/commands/architecture_review.md | Markdown Document |
+| config.json | source/agents/reviewer/config.json | JSON Document |
+| runtime | source/agents/reviewer/runtime | Directory |
+| .gitkeep | source/agents/reviewer/runtime/.gitkeep | Unknown |
+| chat_architect.py | source/chat_architect.py | Python Source |
+| contracts | source/contracts | Directory |
+| .gitkeep | source/contracts/.gitkeep | Unknown |
+| README.md | source/contracts/README.md | Markdown Document |
+| memory | source/memory | Directory |
+| CHANGE_LOG.md | source/memory/CHANGE_LOG.md | Markdown Document |
+| DECISIONS.md | source/memory/DECISIONS.md | Markdown Document |
+| OPEN_TASKS.md | source/memory/OPEN_TASKS.md | Markdown Document |
+| PROJECT_STATE.md | source/memory/PROJECT_STATE.md | Markdown Document |
+| project | source/project | Directory |
+| .gitignore | source/project/.gitignore | Unknown |
+| README.md | source/project/README.md | Markdown Document |
+| SESSION_2026-04-10.md | source/project/SESSION_2026-04-10.md | Markdown Document |
+| config.example.toml | source/project/config.example.toml | Unknown |
+| main.py | source/project/main.py | Python Source |
+| pyproject.toml | source/project/pyproject.toml | Unknown |
+| send_sms.py | source/project/send_sms.py | Python Source |
+| streamlit_app.py | source/project/streamlit_app.py | Python Source |
+| tests | source/project/tests | Directory |
+| test_send_sms.py | source/project/tests/test_send_sms.py | Python Source |
+| requirements.txt | source/requirements.txt | Unknown |
+| tests | source/tests | Directory |
+| test_agent_profile.py | source/tests/test_agent_profile.py | Python Source |
+| test_contract_workflow.py | source/tests/test_contract_workflow.py | Python Source |
+| test_git_ops.py | source/tests/test_git_ops.py | Python Source |
+| test_pipeline.py | source/tests/test_pipeline.py | Python Source |
 | templates | templates | Directory |
 | __init__.py | templates/__init__.py | Python Source |
 | voice_module | templates/voice_module | Directory |
