@@ -1,0 +1,10 @@
+.env
+__pycache__/
+.venv/
+.pytest_cache/
+.pytest-tmp/
+.idea/
+agents/*/runtime/*
+!agents/*/runtime/.gitkeep
+agents/*/logs/
+.discovery/

@@ -1,0 +1,12 @@
+{
+  "name": "programmer",
+  "display_name": "Implementation Programmer",
+  "provider": "claude",
+  "model_profile": "high",
+  "reasoning_profile": "high",
+  "permission_profile": "edit",
+  "persistent_thread": false,
+  "load_private_memory": false,
+  "load_working_state": false,
+  "load_shared_memory": true
+}
