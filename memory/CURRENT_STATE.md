@@ -44,6 +44,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
       - review_contract.md
     - runtime/
       - .gitkeep
+      - session.log
     - COMMANDS.md
     - INBOX.md
     - MEMORY.md
@@ -59,6 +60,8 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
   - voice.py
 - contracts/
   - .gitkeep
+  - IMPLEMENTATION_CONTRACT_0001.md
+  - IMPLEMENTATION_CONTRACT_0002.md
   - README.md
 - memory/
   - CHANGE_LOG.md
@@ -244,10 +247,13 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 | config.json | agents/reviewer/config.json | Agent Config |
 | runtime | agents/reviewer/runtime | Directory |
 | .gitkeep | agents/reviewer/runtime/.gitkeep | Unknown |
+| session.log | agents/reviewer/runtime/session.log | Unknown |
 | voice.py | agents/voice.py | Python Source |
 | chat_architect.py | chat_architect.py | Python Source |
 | contracts | contracts | Directory |
 | .gitkeep | contracts/.gitkeep | Unknown |
+| IMPLEMENTATION_CONTRACT_0001.md | contracts/IMPLEMENTATION_CONTRACT_0001.md | Implementation Contract |
+| IMPLEMENTATION_CONTRACT_0002.md | contracts/IMPLEMENTATION_CONTRACT_0002.md | Implementation Contract |
 | README.md | contracts/README.md | Markdown Document |
 | memory | memory | Directory |
 | CHANGE_LOG.md | memory/CHANGE_LOG.md | Project Memory |
