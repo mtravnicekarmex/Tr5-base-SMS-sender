@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0002
 
-Status: READY_FOR_REVIEWER
+Status: APPROVED
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_REVIEWER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `reviewer`
-- Handed off to: `reviewer`
+- Currently with: `owner`
+- Handed off to: `owner`
 - Created at: `2026-08-18T11:46:11+02:00`
-- Updated at: `2026-08-18T12:48:44+02:00`
+- Updated at: `2026-08-18T12:50:01+02:00`
 
 ---
 
@@ -63,7 +63,7 @@ Acceptance criteria:
 - project/send_sms.py exists and its content is byte-for-byte identical to source/project/send_sms.py at the time of copying
 - source/project/send_sms.py is unchanged after the operation
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -79,7 +79,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+Read source/project/send_sms.py and project/send_sms.py in full (700 lines each) — content is byte-for-byte identical. source/project/send_sms.py confirmed unchanged (only appears as a Read in the session log, never Write/Edit).
 
 ## Point 2
 
@@ -89,7 +91,7 @@ Acceptance criteria:
 - project/main.py exists and its content is byte-for-byte identical to source/project/main.py at the time of copying
 - source/project/main.py is unchanged after the operation
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -105,7 +107,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+Read both source/project/main.py and project/main.py in full (161 lines each) — byte-for-byte identical, including CLI subcommand definitions. source unchanged.
 
 ## Point 3
 
@@ -115,7 +119,7 @@ Acceptance criteria:
 - project/streamlit_app.py exists and its content is byte-for-byte identical to source/project/streamlit_app.py at the time of copying
 - source/project/streamlit_app.py is unchanged after the operation
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -131,7 +135,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+Read both source/project/streamlit_app.py and project/streamlit_app.py in full (819 lines each) — byte-for-byte identical, including all styling/markup. source unchanged.
 
 ## Point 4
 
@@ -141,7 +147,7 @@ Acceptance criteria:
 - project/pyproject.toml exists and its content is byte-for-byte identical to source/project/pyproject.toml at the time of copying
 - source/project/pyproject.toml is unchanged after the operation
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -157,7 +163,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+Read both pyproject.toml files — identical (name, version, dependencies, pytest config). source unchanged.
 
 ## Point 5
 
@@ -168,7 +176,7 @@ Acceptance criteria:
 - source/project/config.example.toml is unchanged after the operation
 - No project/config.toml (a real, non-example config file) is created as part of this point
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -184,7 +192,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+Read both config.example.toml files — identical, only placeholder values present. No project/config.toml exists (confirmed via Glob of project/ and project/**/*). source unchanged.
 
 ## Point 6
 
@@ -194,7 +204,7 @@ Acceptance criteria:
 - project/tests/test_send_sms.py exists and its content is byte-for-byte identical to source/project/tests/test_send_sms.py at the time of copying
 - source/project/tests/test_send_sms.py is unchanged after the operation
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -210,7 +220,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+project/tests/ directory exists (confirmed via Glob project/**/*) and project/tests/test_send_sms.py is byte-for-byte identical to source/project/tests/test_send_sms.py (184 lines each, including FakeClient and all 8 test methods). source unchanged.
 
 ## Point 7
 
@@ -221,7 +233,7 @@ Acceptance criteria:
 - No file named project/SESSION_2026-04-10.md (with hyphens) is created
 - source/project/SESSION_2026-04-10.md is unchanged after the operation
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -237,7 +249,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+project/SESSION_2026_04_10.md (underscores) exists with content byte-for-byte identical to source/project/SESSION_2026-04-10.md (106 lines each). Glob of project/ confirms no hyphenated 'SESSION_2026-04-10.md' file exists. source/project/SESSION_2026-04-10.md unchanged.
 
 ## Point 8
 
@@ -248,7 +262,7 @@ Acceptance criteria:
 - Reading the updated root .gitignore shows every line that existed before this edit is still present and unaltered, with only the new 'config.toml' line added
 - No project/.gitignore file is created as part of this point
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -264,7 +278,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+Read the updated root .gitignore: all 10 pre-existing lines (.env, __pycache__/, .venv/, .pytest_cache/, .pytest-tmp/, .idea/, agents/*/runtime/*, !agents/*/runtime/.gitkeep, agents/*/logs/, .discovery/) are present and unaltered, with 'config.toml' appended as an unanchored new line 11. No project/.gitignore file was created (confirmed absent from Glob project/**/*).
 
 ## Point 9
 
@@ -275,7 +291,7 @@ Acceptance criteria:
 - For each of the seven files copied in points 1-7, its own point's 'unchanged after the operation' criterion is confirmed to still hold at this final check
 - A Glob listing of source/ outside source/project/ shows no new, removed, or renamed file compared to before this contract began
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -290,7 +306,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T12:50:01+02:00._
+
+Glob 'source/project/*' returns exactly the 8 expected items (send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, SESSION_2026-04-10.md, README.md, .gitignore) and 'source/project/tests/*' returns test_send_sms.py — matching the required 9-item enumeration exactly. Glob 'source/*' returns the same 10 items as before this contract, confirming source/ outside source/project/ is untouched. Combined with points 1-7's direct byte-for-byte confirmation, the 'unchanged after the operation' criteria hold.
 
 ---
 
@@ -352,7 +370,11 @@ Migrated the SMS gateway application from the read-only source/project/ referenc
 
 # Implementation Review
 
-_Awaiting implementation review._
+### Round 1 — 2026-08-18T12:50:01+02:00 — Verdict: APPROVED — Reviewer: `reviewer`
+
+All 9 points independently re-verified against the live repository, not just the programmer's notes. Points 1-5 (send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml): read both source and project copies in full — byte-for-byte identical, source files untouched. Point 6: project/tests/test_send_sms.py created and byte-for-byte identical to source, tests/ directory correctly created. Point 7: project/SESSION_2026_04_10.md created with underscore naming per ADR-008, content byte-for-byte identical to the hyphenated source file, no hyphenated file exists in project/. Point 8: root .gitignore read directly — all 10 prior lines preserved unaltered, 'config.toml' added as an unanchored new 11th line, no project/.gitignore created. Point 9: Glob of source/project/ (8 items) + source/project/tests/ (1 item) matches the exact 9-item pre-contract inventory with nothing added/removed/renamed; Glob of source/ root (10 items) unchanged. No point required Bash-tool access, consistent with round 3's architecture-review acceptance. Out of Scope fully respected: project/README.md untouched, no venv/dependency install/test execution attempted, source/ entirely unmodified.
+
+Out of Scope check: OK — Checked the discovery diff against the contract's 9 points. All 8 'Added' application files (project/send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, tests/test_send_sms.py, SESSION_2026_04_10.md) map exactly to points 1-7. The 'Changed' .gitignore maps exactly to point 8. The two remaining diffed items — agents/programmer/runtime/session.log (Added) and agents/architect/WORKING_STATE.md (Changed) — are not code or contract-governed content: session.log is the framework's own per-agent activity log (read directly; its 20 entries are exactly the Glob/Read/Write/Edit calls corresponding 1:1 to the contract's points, no extra tool calls), and WORKING_STATE.md's own header states it is 'Generated automatically from the live contract queue on every state change... do not edit by hand' — a standard automatic side effect of the contract workflow tooling transitioning this contract to READY_FOR_REVIEWER, not a discretionary edit by the programmer. Neither reflects scope creep. project/README.md was independently confirmed absent from both 'Added' and 'Changed' — untouched, as required. No venv, dependency install, or test execution was attempted (confirmed by the session.log's tool-call list containing only Read/Write/Edit/Glob, no Bash). source/ is confirmed byte-for-byte unchanged via direct comparison of all 7 copied files plus the Glob-based directory listing check in point 9.
 
 ---
 
@@ -366,12 +388,12 @@ _Not filled in._
 {
   "number": 2,
   "title": "Migrate SMS gateway application from read-only source/project/ into project/",
-  "status": "READY_FOR_REVIEWER",
+  "status": "APPROVED",
   "created_by": "architect",
-  "assigned_to": "reviewer",
-  "handoff_to": "reviewer",
+  "assigned_to": "owner",
+  "handoff_to": "owner",
   "created_at": "2026-08-18T11:46:11+02:00",
-  "updated_at": "2026-08-18T12:48:44+02:00",
+  "updated_at": "2026-08-18T12:50:01+02:00",
   "points": [
     {
       "number": 1,
@@ -389,10 +411,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Read source/project/send_sms.py and project/send_sms.py in full (700 lines each) — content is byte-for-byte identical. source/project/send_sms.py confirmed unchanged (only appears as a Read in the session log, never Write/Edit).",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 2,
@@ -410,10 +432,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Read both source/project/main.py and project/main.py in full (161 lines each) — byte-for-byte identical, including CLI subcommand definitions. source unchanged.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 3,
@@ -431,10 +453,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Read both source/project/streamlit_app.py and project/streamlit_app.py in full (819 lines each) — byte-for-byte identical, including all styling/markup. source unchanged.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 4,
@@ -452,10 +474,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Read both pyproject.toml files — identical (name, version, dependencies, pytest config). source unchanged.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 5,
@@ -474,10 +496,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Read both config.example.toml files — identical, only placeholder values present. No project/config.toml exists (confirmed via Glob of project/ and project/**/*). source unchanged.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 6,
@@ -495,10 +517,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "project/tests/ directory exists (confirmed via Glob project/**/*) and project/tests/test_send_sms.py is byte-for-byte identical to source/project/tests/test_send_sms.py (184 lines each, including FakeClient and all 8 test methods). source unchanged.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 7,
@@ -517,10 +539,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "project/SESSION_2026_04_10.md (underscores) exists with content byte-for-byte identical to source/project/SESSION_2026-04-10.md (106 lines each). Glob of project/ confirms no hyphenated 'SESSION_2026-04-10.md' file exists. source/project/SESSION_2026-04-10.md unchanged.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 8,
@@ -539,10 +561,10 @@ _Not filled in._
       "programmer_tests": [
         "No automated test execution was performed or is claimed — per the contract's explicit Out of Scope, the programmer's Claude 'edit' permission profile (Read/Grep/Glob/Edit/Write only, no Bash) cannot run python/pip/venv/pytest commands. Verification for points 1-8 was done via Read (content comparison at copy time) and for point 9 via Glob (file-listing comparison), as the contract specifies. Setting up project/.venv, installing openpyxl/pandas/requests/streamlit, and running the migrated 8-test suite (project/tests/test_send_sms.py) remains a manual step for the owner, as stated in the contract's Out of Scope and Future Evolution sections."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Read the updated root .gitignore: all 10 pre-existing lines (.env, __pycache__/, .venv/, .pytest_cache/, .pytest-tmp/, .idea/, agents/*/runtime/*, !agents/*/runtime/.gitkeep, agents/*/logs/, .discovery/) are present and unaltered, with 'config.toml' appended as an unanchored new line 11. No project/.gitignore file was created (confirmed absent from Glob project/**/*).",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 9,
@@ -561,10 +583,10 @@ _Not filled in._
         "Glob source/project/tests/* — test_send_sms.py present, matches pre-contract inventory",
         "Glob source/* — 10 items, unchanged from pre-contract state"
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Glob 'source/project/*' returns exactly the 8 expected items (send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, SESSION_2026-04-10.md, README.md, .gitignore) and 'source/project/tests/*' returns test_send_sms.py — matching the required 9-item enumeration exactly. Glob 'source/*' returns the same 10 items as before this contract, confirming source/ outside source/project/ is untouched. Combined with points 1-7's direct byte-for-byte confirmation, the 'unchanged after the operation' criteria hold.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T12:50:01+02:00",
+      "status": "APPROVED"
     }
   ],
   "implementer": "programmer",
@@ -602,6 +624,63 @@ _Not filled in._
     }
   ],
   "completion_notes": "Migrated the SMS gateway application from the read-only source/project/ reference into project/ via verbatim Read+Write copies (no Bash tool available, consistent with the programmer's 'edit' permission profile). Created project/send_sms.py, project/main.py, project/streamlit_app.py, project/pyproject.toml, project/config.example.toml, project/tests/test_send_sms.py, and project/SESSION_2026_04_10.md (renamed from the hyphenated source name per ADR-008). Added a single 'config.toml' line to the repository root .gitignore, appended after the existing .discovery/ line with all prior lines preserved unaltered. Verified via Glob that source/project/ still contains exactly its original 9 items and that source/ outside source/project/ is untouched. No environment setup, dependency installation, or test execution was attempted — these remain explicit manual follow-ups for the owner per the contract's Out of Scope section, since the programmer has no Bash tool access.",
-  "implementation_review_rounds": []
+  "implementation_review_rounds": [
+    {
+      "round": 1,
+      "date": "2026-08-18T12:50:01+02:00",
+      "verdict": "APPROVED",
+      "reviewer": "reviewer",
+      "summary": "All 9 points independently re-verified against the live repository, not just the programmer's notes. Points 1-5 (send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml): read both source and project copies in full — byte-for-byte identical, source files untouched. Point 6: project/tests/test_send_sms.py created and byte-for-byte identical to source, tests/ directory correctly created. Point 7: project/SESSION_2026_04_10.md created with underscore naming per ADR-008, content byte-for-byte identical to the hyphenated source file, no hyphenated file exists in project/. Point 8: root .gitignore read directly — all 10 prior lines preserved unaltered, 'config.toml' added as an unanchored new 11th line, no project/.gitignore created. Point 9: Glob of source/project/ (8 items) + source/project/tests/ (1 item) matches the exact 9-item pre-contract inventory with nothing added/removed/renamed; Glob of source/ root (10 items) unchanged. No point required Bash-tool access, consistent with round 3's architecture-review acceptance. Out of Scope fully respected: project/README.md untouched, no venv/dependency install/test execution attempted, source/ entirely unmodified.",
+      "out_of_scope_ok": true,
+      "out_of_scope_findings": "Checked the discovery diff against the contract's 9 points. All 8 'Added' application files (project/send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, tests/test_send_sms.py, SESSION_2026_04_10.md) map exactly to points 1-7. The 'Changed' .gitignore maps exactly to point 8. The two remaining diffed items — agents/programmer/runtime/session.log (Added) and agents/architect/WORKING_STATE.md (Changed) — are not code or contract-governed content: session.log is the framework's own per-agent activity log (read directly; its 20 entries are exactly the Glob/Read/Write/Edit calls corresponding 1:1 to the contract's points, no extra tool calls), and WORKING_STATE.md's own header states it is 'Generated automatically from the live contract queue on every state change... do not edit by hand' — a standard automatic side effect of the contract workflow tooling transitioning this contract to READY_FOR_REVIEWER, not a discretionary edit by the programmer. Neither reflects scope creep. project/README.md was independently confirmed absent from both 'Added' and 'Changed' — untouched, as required. No venv, dependency install, or test execution was attempted (confirmed by the session.log's tool-call list containing only Read/Write/Edit/Glob, no Bash). source/ is confirmed byte-for-byte unchanged via direct comparison of all 7 copied files plus the Glob-based directory listing check in point 9.",
+      "reviews": [
+        {
+          "point": 1,
+          "status": "APPROVED",
+          "review": "Read source/project/send_sms.py and project/send_sms.py in full (700 lines each) — content is byte-for-byte identical. source/project/send_sms.py confirmed unchanged (only appears as a Read in the session log, never Write/Edit)."
+        },
+        {
+          "point": 2,
+          "status": "APPROVED",
+          "review": "Read both source/project/main.py and project/main.py in full (161 lines each) — byte-for-byte identical, including CLI subcommand definitions. source unchanged."
+        },
+        {
+          "point": 3,
+          "status": "APPROVED",
+          "review": "Read both source/project/streamlit_app.py and project/streamlit_app.py in full (819 lines each) — byte-for-byte identical, including all styling/markup. source unchanged."
+        },
+        {
+          "point": 4,
+          "status": "APPROVED",
+          "review": "Read both pyproject.toml files — identical (name, version, dependencies, pytest config). source unchanged."
+        },
+        {
+          "point": 5,
+          "status": "APPROVED",
+          "review": "Read both config.example.toml files — identical, only placeholder values present. No project/config.toml exists (confirmed via Glob of project/ and project/**/*). source unchanged."
+        },
+        {
+          "point": 6,
+          "status": "APPROVED",
+          "review": "project/tests/ directory exists (confirmed via Glob project/**/*) and project/tests/test_send_sms.py is byte-for-byte identical to source/project/tests/test_send_sms.py (184 lines each, including FakeClient and all 8 test methods). source unchanged."
+        },
+        {
+          "point": 7,
+          "status": "APPROVED",
+          "review": "project/SESSION_2026_04_10.md (underscores) exists with content byte-for-byte identical to source/project/SESSION_2026-04-10.md (106 lines each). Glob of project/ confirms no hyphenated 'SESSION_2026-04-10.md' file exists. source/project/SESSION_2026-04-10.md unchanged."
+        },
+        {
+          "point": 8,
+          "status": "APPROVED",
+          "review": "Read the updated root .gitignore: all 10 pre-existing lines (.env, __pycache__/, .venv/, .pytest_cache/, .pytest-tmp/, .idea/, agents/*/runtime/*, !agents/*/runtime/.gitkeep, agents/*/logs/, .discovery/) are present and unaltered, with 'config.toml' appended as an unanchored new line 11. No project/.gitignore file was created (confirmed absent from Glob project/**/*)."
+        },
+        {
+          "point": 9,
+          "status": "APPROVED",
+          "review": "Glob 'source/project/*' returns exactly the 8 expected items (send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, SESSION_2026-04-10.md, README.md, .gitignore) and 'source/project/tests/*' returns test_send_sms.py — matching the required 9-item enumeration exactly. Glob 'source/*' returns the same 10 items as before this contract, confirming source/ outside source/project/ is untouched. Combined with points 1-7's direct byte-for-byte confirmation, the 'unchanged after the operation' criteria hold."
+        }
+      ]
+    }
+  ]
 }
 CONTRACT-META -->
