@@ -33,6 +33,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
       - implement_contract.md
     - runtime/
       - .gitkeep
+      - session.log
     - COMMANDS.md
     - INBOX.md
     - MEMORY.md
@@ -62,6 +63,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
   - .gitkeep
   - IMPLEMENTATION_CONTRACT_0001.md
   - IMPLEMENTATION_CONTRACT_0002.md
+  - OWNER_INBOX.md
   - README.md
 - memory/
   - CHANGE_LOG.md
@@ -71,7 +73,15 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
   - PROJECT_STATE.md
   - TEMPLATE_ORIGINS.md
 - project/
+  - tests/
+    - test_send_sms.py
   - README.md
+  - SESSION_2026_04_10.md
+  - config.example.toml
+  - main.py
+  - pyproject.toml
+  - send_sms.py
+  - streamlit_app.py
 - source/
   - agents/
     - architect/
@@ -235,6 +245,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 | config.json | agents/programmer/config.json | Agent Config |
 | runtime | agents/programmer/runtime | Directory |
 | .gitkeep | agents/programmer/runtime/.gitkeep | Unknown |
+| session.log | agents/programmer/runtime/session.log | Unknown |
 | progress.py | agents/progress.py | Python Source |
 | reviewer | agents/reviewer | Directory |
 | COMMANDS.md | agents/reviewer/COMMANDS.md | Agent Commands |
@@ -254,6 +265,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 | .gitkeep | contracts/.gitkeep | Unknown |
 | IMPLEMENTATION_CONTRACT_0001.md | contracts/IMPLEMENTATION_CONTRACT_0001.md | Implementation Contract |
 | IMPLEMENTATION_CONTRACT_0002.md | contracts/IMPLEMENTATION_CONTRACT_0002.md | Implementation Contract |
+| OWNER_INBOX.md | contracts/OWNER_INBOX.md | Markdown Document |
 | README.md | contracts/README.md | Markdown Document |
 | memory | memory | Directory |
 | CHANGE_LOG.md | memory/CHANGE_LOG.md | Project Memory |
@@ -264,6 +276,14 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 | TEMPLATE_ORIGINS.md | memory/TEMPLATE_ORIGINS.md | Project Memory |
 | project | project | Directory |
 | README.md | project/README.md | Markdown Document |
+| SESSION_2026_04_10.md | project/SESSION_2026_04_10.md | Markdown Document |
+| config.example.toml | project/config.example.toml | Unknown |
+| main.py | project/main.py | Python Source |
+| pyproject.toml | project/pyproject.toml | Unknown |
+| send_sms.py | project/send_sms.py | Python Source |
+| streamlit_app.py | project/streamlit_app.py | Python Source |
+| tests | project/tests | Directory |
+| test_send_sms.py | project/tests/test_send_sms.py | Python Source |
 | requirements.txt | requirements.txt | Unknown |
 | source | source | Directory |
 | .env.example | source/.env.example | Unknown |
