@@ -63,6 +63,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
   - .gitkeep
   - IMPLEMENTATION_CONTRACT_0001.md
   - IMPLEMENTATION_CONTRACT_0002.md
+  - IMPLEMENTATION_CONTRACT_0003.md
   - OWNER_INBOX.md
   - README.md
 - memory/
@@ -265,6 +266,7 @@ Generated automatically before every `create_contract`/`revise_contract` call â€
 | .gitkeep | contracts/.gitkeep | Unknown |
 | IMPLEMENTATION_CONTRACT_0001.md | contracts/IMPLEMENTATION_CONTRACT_0001.md | Implementation Contract |
 | IMPLEMENTATION_CONTRACT_0002.md | contracts/IMPLEMENTATION_CONTRACT_0002.md | Implementation Contract |
+| IMPLEMENTATION_CONTRACT_0003.md | contracts/IMPLEMENTATION_CONTRACT_0003.md | Implementation Contract |
 | OWNER_INBOX.md | contracts/OWNER_INBOX.md | Markdown Document |
 | README.md | contracts/README.md | Markdown Document |
 | memory | memory | Directory |
