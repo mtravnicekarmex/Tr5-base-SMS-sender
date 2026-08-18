@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0001
 
-Status: READY_FOR_REVIEWER
+Status: APPROVED
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_REVIEWER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `reviewer`
-- Handed off to: `reviewer`
+- Currently with: `owner`
+- Handed off to: `owner`
 - Created at: `2026-08-18T11:25:10+02:00`
-- Updated at: `2026-08-18T14:48:06+02:00`
+- Updated at: `2026-08-18T14:49:12+02:00`
 
 ---
 
@@ -64,7 +64,7 @@ Acceptance criteria:
 - The Purpose section explicitly names the project as a tool for managing GSM gate phone numbers via an SMS gateway
 - The Purpose section still states that this directory is kept separate from the framework/governance layer at the repository root
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -83,7 +83,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T14:49:12+02:00._
+
+Purpose section (lines 3-16) names the project explicitly as 'a CLI and Streamlit tool for managing GSM gate phone number lists over an SMS gateway', states this directory holds the actual migrated application code with contract changes landing here, and states it is kept separate from the framework/governance layer at the repository root, listing concrete root-level files/dirs. No 'No project code yet' or equivalent empty/unstarted wording remains. Matches acceptance criteria exactly.
 
 ## Point 2
 
@@ -95,7 +97,7 @@ Acceptance criteria:
 - The section states that the test suite (8 tests) has been confirmed passing
 - The section no longer contains the phrase 'Directory exists. No project code yet' or any equivalent placeholder statement
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -112,7 +114,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T14:49:12+02:00._
+
+'Current capabilities (v0.1)' (lines 18-38) lists send_sms.py, main.py, streamlit_app.py, tests/test_send_sms.py, and config.example.toml, each with an accurate one-line description verified against actual file contents (confirmed send_sms.py's config loading/normalization/sheet analysis/SmsGatewayClient/atomic Excel write with backup via direct code read; confirmed main.py's six subcommands via grep on add_parser: send, send-batch, supplement, find-one, find-sheet, duplicates — all named; confirmed 8 test_ methods via grep, and the README states the 8-test suite was confirmed passing by the owner). No 'Directory exists. No project code yet' placeholder remains.
 
 ## Point 3
 
@@ -124,7 +128,7 @@ Acceptance criteria:
 - The note includes at least one concrete example command showing installation into project/.venv (e.g. `project\.venv\Scripts\python.exe -m pip install openpyxl pandas requests streamlit`) and at least one example command showing how to run the test suite against it (e.g. `project\.venv\Scripts\python.exe -m unittest discover -s tests -v`)
 - The note mentions that a local project/config.toml (copied from config.example.toml, itself gitignored per the root .gitignore's config.toml entry) is required to run the application for real
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -140,7 +144,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T14:49:12+02:00._
+
+'Development environment' sub-section (lines 40-60), nested inside Current capabilities, states project/.venv is a project-scoped venv distinct from the root framework environment, states it is gitignored via the existing unanchored .venv/ pattern (confirmed present at .gitignore line 3) rather than versioned, lists dependencies openpyxl/pandas/requests/streamlit sourced from project/pyproject.toml (confirmed these are exactly the four dependencies declared there), gives a concrete pip-install command and a concrete unittest-discover command, and mentions that a local project/config.toml copied from config.example.toml (itself gitignored, confirmed at .gitignore line 11) is required to run the app for real. All four acceptance criteria satisfied.
 
 ## Point 4
 
@@ -151,7 +157,7 @@ Acceptance criteria:
 - The section no longer contains the phrase 'Empty until the first contract is implemented against a real project' or any equivalent placeholder statement
 - None of the four listed limitations is described as fixed or resolved in this same document (only documented as a current gap)
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -170,7 +176,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T14:49:12+02:00._
+
+'Current limitations' (lines 62-70) lists all four required items as distinct bullets: missing tests for main.py/streamlit_app.py, no file locking for concurrent Excel writes (confirmed no locking primitive in send_sms.py's write path), no CLI --timeout option unlike Streamlit UI (confirmed: 0 timeout occurrences in main.py vs. 22 in streamlit_app.py), and the single global phone-column-index constant (confirmed GATE_PHONE_COLUMN_INDEX = 1 is applied uniformly across send-batch/find-sheet/duplicates operations on gate sheets). No placeholder phrase remains, and none of the four items is described as fixed.
 
 ## Point 5
 
@@ -181,7 +189,7 @@ Acceptance criteria:
 - The section explicitly states that the limitations listed in 'Current limitations' are deferred to future contracts rather than addressed here
 - The section does not commit to a specific implementation timeline or design for any deferred item
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -200,7 +208,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T14:49:12+02:00._
+
+'Planned evolution' (lines 72-79) states the project grows as further contracts are implemented, explicitly defers concurrent-write protection, CLI/UI parameter parity, per-gate column configuration, and additional test coverage to future contracts, keeps the PRINCIPLES.md P1/P15 reference, and commits to no specific timeline or design for any deferred item.
 
 ## Point 6
 
@@ -212,7 +222,7 @@ Acceptance criteria:
 - A file-listing check (e.g. Glob across the repository) shows project/README.md as the only file changed by this contract; source/, project/.venv, and every other file under project/ remain unmodified
 - No stale placeholder phrases from the original Tr5-base template ('point zero', 'No project code yet', 'Empty until the first contract is implemented') remain anywhere in the file
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -229,7 +239,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-18T14:49:12+02:00._
+
+Full read-through shows no internal contradiction and no remaining implication the directory is empty. The file contains exactly the four top-level ## sections (Purpose, Current capabilities (v0.1), Current limitations, Planned evolution) with 'Development environment' as a ### sub-section nested inside Current capabilities, not a separate top-level section. Grep for 'point zero|No project code yet|Empty until the first contract is implemented' returns no matches. Glob of project/* confirms only README.md was modified by this contract; send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, tests/test_send_sms.py, and SESSION_2026_04_10.md are unchanged (also unchanged per the discovery diff, which lists only project/README.md as a substantive content change).
 
 ---
 
@@ -287,7 +299,11 @@ Rewrote project/README.md to replace the stale Tr5-base placeholder with content
 
 # Implementation Review
 
-_Awaiting implementation review._
+### Round 1 — 2026-08-18T14:49:12+02:00 — Verdict: APPROVED — Reviewer: `reviewer`
+
+Read the final project/README.md and independently re-verified every factual claim in it against the actual source files (project/main.py's six add_parser subcommands, tests/test_send_sms.py's 8 test_ methods, project/pyproject.toml's four dependencies, send_sms.py's GATE_PHONE_COLUMN_INDEX/SUPPLEMENT_PHONE_COLUMN_INDEX constants, its NamedTemporaryFile+Path.replace atomic-write path with optional create_backup_copy, streamlit_app.py's 22 timeout-related occurrences vs. main.py having none, and the root .gitignore's .venv/ and config.toml entries). All six points match their accepted acceptance criteria exactly, no stale placeholder phrases remain, the document has exactly the four ADR-015 top-level sections plus one nested development-environment note, and no file other than project/README.md was substantively changed.
+
+Out of Scope check: OK — Discovery diff lists three changed files: project/README.md, agents/architect/WORKING_STATE.md, and agents/programmer/runtime/session.log. project/README.md is the one file this contract's points call for and its content matches every point above. agents/architect/WORKING_STATE.md is explicitly machine-generated per Tr5-base decision 10 ('Generated automatically from the live contract queue on every state change ... do not edit by hand') and its content is only the current contract-queue status line, not a manual edit by the programmer. agents/programmer/runtime/session.log is an append-only tool-call log; the entries from 14:47:24 onward (this contract's session) show only Read/Glob/Grep on project/README.md, project/pyproject.toml, project/main.py, and project/tests/test_send_sms.py plus a single Write to project/README.md — all read-only verification and the one in-scope write, consistent with the contract's points. The earlier log lines at 12:44-12:48 belong to the prior contract (IMPLEMENTATION_CONTRACT_0002)'s session appended to the same cumulative file and are not new work performed under this contract. No file under source/, no project/.venv, no project/config.toml, and no other file under project/ was created, modified, or deleted. Nothing beyond the contract's points was touched.
 
 ---
 
@@ -301,12 +317,12 @@ _Not filled in._
 {
   "number": 1,
   "title": "Rewrite project/README.md to reflect the actual, now-migrated project state",
-  "status": "READY_FOR_REVIEWER",
+  "status": "APPROVED",
   "created_by": "architect",
-  "assigned_to": "reviewer",
-  "handoff_to": "reviewer",
+  "assigned_to": "owner",
+  "handoff_to": "owner",
   "created_at": "2026-08-18T11:25:10+02:00",
-  "updated_at": "2026-08-18T14:48:06+02:00",
+  "updated_at": "2026-08-18T14:49:12+02:00",
   "points": [
     {
       "number": 1,
@@ -328,10 +344,10 @@ _Not filled in._
         "Grep confirming no stale placeholder phrases remain in project/README.md",
         "Glob confirming project/README.md was the only file changed"
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Purpose section (lines 3-16) names the project explicitly as 'a CLI and Streamlit tool for managing GSM gate phone number lists over an SMS gateway', states this directory holds the actual migrated application code with contract changes landing here, and states it is kept separate from the framework/governance layer at the repository root, listing concrete root-level files/dirs. No 'No project code yet' or equivalent empty/unstarted wording remains. Matches acceptance criteria exactly.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T14:49:12+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 2,
@@ -352,10 +368,10 @@ _Not filled in._
         "Grep for add_parser in project/main.py — confirmed 6 subcommands",
         "Grep for def test_ in project/tests/test_send_sms.py — confirmed 8 tests"
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "'Current capabilities (v0.1)' (lines 18-38) lists send_sms.py, main.py, streamlit_app.py, tests/test_send_sms.py, and config.example.toml, each with an accurate one-line description verified against actual file contents (confirmed send_sms.py's config loading/normalization/sheet analysis/SmsGatewayClient/atomic Excel write with backup via direct code read; confirmed main.py's six subcommands via grep on add_parser: send, send-batch, supplement, find-one, find-sheet, duplicates — all named; confirmed 8 test_ methods via grep, and the README states the 8-test suite was confirmed passing by the owner). No 'Directory exists. No project code yet' placeholder remains.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T14:49:12+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 3,
@@ -375,10 +391,10 @@ _Not filled in._
       "programmer_tests": [
         "Read project/pyproject.toml to confirm dependency list matches"
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "'Development environment' sub-section (lines 40-60), nested inside Current capabilities, states project/.venv is a project-scoped venv distinct from the root framework environment, states it is gitignored via the existing unanchored .venv/ pattern (confirmed present at .gitignore line 3) rather than versioned, lists dependencies openpyxl/pandas/requests/streamlit sourced from project/pyproject.toml (confirmed these are exactly the four dependencies declared there), gives a concrete pip-install command and a concrete unittest-discover command, and mentions that a local project/config.toml copied from config.example.toml (itself gitignored, confirmed at .gitignore line 11) is required to run the app for real. All four acceptance criteria satisfied.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T14:49:12+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 4,
@@ -400,10 +416,10 @@ _Not filled in._
         "Grep confirming no stale placeholder phrases remain in project/README.md",
         "Glob confirming project/README.md was the only file changed"
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "'Current limitations' (lines 62-70) lists all four required items as distinct bullets: missing tests for main.py/streamlit_app.py, no file locking for concurrent Excel writes (confirmed no locking primitive in send_sms.py's write path), no CLI --timeout option unlike Streamlit UI (confirmed: 0 timeout occurrences in main.py vs. 22 in streamlit_app.py), and the single global phone-column-index constant (confirmed GATE_PHONE_COLUMN_INDEX = 1 is applied uniformly across send-batch/find-sheet/duplicates operations on gate sheets). No placeholder phrase remains, and none of the four items is described as fixed.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T14:49:12+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 5,
@@ -425,10 +441,10 @@ _Not filled in._
         "Grep confirming no stale placeholder phrases remain in project/README.md",
         "Glob confirming project/README.md was the only file changed"
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "'Planned evolution' (lines 72-79) states the project grows as further contracts are implemented, explicitly defers concurrent-write protection, CLI/UI parameter parity, per-gate column configuration, and additional test coverage to future contracts, keeps the PRINCIPLES.md P1/P15 reference, and commits to no specific timeline or design for any deferred item.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T14:49:12+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 6,
@@ -449,10 +465,10 @@ _Not filled in._
         "Grep 'point zero|No project code yet|Empty until the first contract is implemented' on project/README.md — no matches",
         "Glob project/*.md — confirms only README.md and SESSION_2026_04_10.md present, no unintended new files"
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Full read-through shows no internal contradiction and no remaining implication the directory is empty. The file contains exactly the four top-level ## sections (Purpose, Current capabilities (v0.1), Current limitations, Planned evolution) with 'Development environment' as a ### sub-section nested inside Current capabilities, not a separate top-level section. Grep for 'point zero|No project code yet|Empty until the first contract is implemented' returns no matches. Glob of project/* confirms only README.md was modified by this contract; send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, tests/test_send_sms.py, and SESSION_2026_04_10.md are unchanged (also unchanged per the discovery diff, which lists only project/README.md as a substantive content change).",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-18T14:49:12+02:00",
+      "status": "APPROVED"
     }
   ],
   "implementer": "programmer",
@@ -483,6 +499,48 @@ _Not filled in._
     }
   ],
   "completion_notes": "Rewrote project/README.md to replace the stale Tr5-base placeholder with content accurately describing the actual, migrated SMS gateway helper tool (send_sms.py, main.py with its six subcommands, streamlit_app.py, tests/test_send_sms.py, config.example.toml), added a development-environment note about the owner-created project/.venv, documented the four known limitations, and updated the Planned evolution section to defer those limitations to future contracts while keeping the PRINCIPLES.md P1/P15 reference. Only project/README.md was touched; source/ (including source/project/) and every other file under project/ remain unmodified, per ADR-024 and the contract's Out of Scope.",
-  "implementation_review_rounds": []
+  "implementation_review_rounds": [
+    {
+      "round": 1,
+      "date": "2026-08-18T14:49:12+02:00",
+      "verdict": "APPROVED",
+      "reviewer": "reviewer",
+      "summary": "Read the final project/README.md and independently re-verified every factual claim in it against the actual source files (project/main.py's six add_parser subcommands, tests/test_send_sms.py's 8 test_ methods, project/pyproject.toml's four dependencies, send_sms.py's GATE_PHONE_COLUMN_INDEX/SUPPLEMENT_PHONE_COLUMN_INDEX constants, its NamedTemporaryFile+Path.replace atomic-write path with optional create_backup_copy, streamlit_app.py's 22 timeout-related occurrences vs. main.py having none, and the root .gitignore's .venv/ and config.toml entries). All six points match their accepted acceptance criteria exactly, no stale placeholder phrases remain, the document has exactly the four ADR-015 top-level sections plus one nested development-environment note, and no file other than project/README.md was substantively changed.",
+      "out_of_scope_ok": true,
+      "out_of_scope_findings": "Discovery diff lists three changed files: project/README.md, agents/architect/WORKING_STATE.md, and agents/programmer/runtime/session.log. project/README.md is the one file this contract's points call for and its content matches every point above. agents/architect/WORKING_STATE.md is explicitly machine-generated per Tr5-base decision 10 ('Generated automatically from the live contract queue on every state change ... do not edit by hand') and its content is only the current contract-queue status line, not a manual edit by the programmer. agents/programmer/runtime/session.log is an append-only tool-call log; the entries from 14:47:24 onward (this contract's session) show only Read/Glob/Grep on project/README.md, project/pyproject.toml, project/main.py, and project/tests/test_send_sms.py plus a single Write to project/README.md — all read-only verification and the one in-scope write, consistent with the contract's points. The earlier log lines at 12:44-12:48 belong to the prior contract (IMPLEMENTATION_CONTRACT_0002)'s session appended to the same cumulative file and are not new work performed under this contract. No file under source/, no project/.venv, no project/config.toml, and no other file under project/ was created, modified, or deleted. Nothing beyond the contract's points was touched.",
+      "reviews": [
+        {
+          "point": 1,
+          "status": "APPROVED",
+          "review": "Purpose section (lines 3-16) names the project explicitly as 'a CLI and Streamlit tool for managing GSM gate phone number lists over an SMS gateway', states this directory holds the actual migrated application code with contract changes landing here, and states it is kept separate from the framework/governance layer at the repository root, listing concrete root-level files/dirs. No 'No project code yet' or equivalent empty/unstarted wording remains. Matches acceptance criteria exactly."
+        },
+        {
+          "point": 2,
+          "status": "APPROVED",
+          "review": "'Current capabilities (v0.1)' (lines 18-38) lists send_sms.py, main.py, streamlit_app.py, tests/test_send_sms.py, and config.example.toml, each with an accurate one-line description verified against actual file contents (confirmed send_sms.py's config loading/normalization/sheet analysis/SmsGatewayClient/atomic Excel write with backup via direct code read; confirmed main.py's six subcommands via grep on add_parser: send, send-batch, supplement, find-one, find-sheet, duplicates — all named; confirmed 8 test_ methods via grep, and the README states the 8-test suite was confirmed passing by the owner). No 'Directory exists. No project code yet' placeholder remains."
+        },
+        {
+          "point": 3,
+          "status": "APPROVED",
+          "review": "'Development environment' sub-section (lines 40-60), nested inside Current capabilities, states project/.venv is a project-scoped venv distinct from the root framework environment, states it is gitignored via the existing unanchored .venv/ pattern (confirmed present at .gitignore line 3) rather than versioned, lists dependencies openpyxl/pandas/requests/streamlit sourced from project/pyproject.toml (confirmed these are exactly the four dependencies declared there), gives a concrete pip-install command and a concrete unittest-discover command, and mentions that a local project/config.toml copied from config.example.toml (itself gitignored, confirmed at .gitignore line 11) is required to run the app for real. All four acceptance criteria satisfied."
+        },
+        {
+          "point": 4,
+          "status": "APPROVED",
+          "review": "'Current limitations' (lines 62-70) lists all four required items as distinct bullets: missing tests for main.py/streamlit_app.py, no file locking for concurrent Excel writes (confirmed no locking primitive in send_sms.py's write path), no CLI --timeout option unlike Streamlit UI (confirmed: 0 timeout occurrences in main.py vs. 22 in streamlit_app.py), and the single global phone-column-index constant (confirmed GATE_PHONE_COLUMN_INDEX = 1 is applied uniformly across send-batch/find-sheet/duplicates operations on gate sheets). No placeholder phrase remains, and none of the four items is described as fixed."
+        },
+        {
+          "point": 5,
+          "status": "APPROVED",
+          "review": "'Planned evolution' (lines 72-79) states the project grows as further contracts are implemented, explicitly defers concurrent-write protection, CLI/UI parameter parity, per-gate column configuration, and additional test coverage to future contracts, keeps the PRINCIPLES.md P1/P15 reference, and commits to no specific timeline or design for any deferred item."
+        },
+        {
+          "point": 6,
+          "status": "APPROVED",
+          "review": "Full read-through shows no internal contradiction and no remaining implication the directory is empty. The file contains exactly the four top-level ## sections (Purpose, Current capabilities (v0.1), Current limitations, Planned evolution) with 'Development environment' as a ### sub-section nested inside Current capabilities, not a separate top-level section. Grep for 'point zero|No project code yet|Empty until the first contract is implemented' returns no matches. Glob of project/* confirms only README.md was modified by this contract; send_sms.py, main.py, streamlit_app.py, pyproject.toml, config.example.toml, tests/test_send_sms.py, and SESSION_2026_04_10.md are unchanged (also unchanged per the discovery diff, which lists only project/README.md as a substantive content change)."
+        }
+      ]
+    }
+  ]
 }
 CONTRACT-META -->
