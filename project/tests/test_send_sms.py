@@ -9,6 +9,7 @@ import unittest
 from openpyxl import Workbook, load_workbook
 
 from send_sms import (
+    GATE_PHONE_COLUMN_INDEX,
     SmsResult,
     SpreadsheetError,
     analyze_sheet,
@@ -113,6 +114,53 @@ class SendSmsTests(unittest.TestCase):
             self.assertEqual(config.gateway_base, "http://localhost:8080")
             self.assertEqual(config.excel_path, Path("data.xlsx"))
             self.assertEqual(config.get_gate(1).phone, "+420601060959")
+
+    def test_load_config_defaults_phone_column_index_when_omitted(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "config.toml"
+            config_path.write_text(
+                "\n".join(
+                    [
+                        'gateway_base = "http://localhost:8080"',
+                        'excel_path = "data.xlsx"',
+                        "",
+                        "[[gates]]",
+                        "id = 1",
+                        'phone = "+420601060959"',
+                        'password = "2803"',
+                        'sheet = "1 - Benesovska"',
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            config = load_config(config_path)
+
+            self.assertEqual(config.get_gate(1).phone_column_index, GATE_PHONE_COLUMN_INDEX)
+
+    def test_load_config_reads_explicit_phone_column_index(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "config.toml"
+            config_path.write_text(
+                "\n".join(
+                    [
+                        'gateway_base = "http://localhost:8080"',
+                        'excel_path = "data.xlsx"',
+                        "",
+                        "[[gates]]",
+                        "id = 1",
+                        'phone = "+420601060959"',
+                        'password = "2803"',
+                        'sheet = "1 - Benesovska"',
+                        "phone_column_index = 3",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            config = load_config(config_path)
+
+            self.assertEqual(config.get_gate(1).phone_column_index, 3)
 
     def test_save_sheet_numbers_normalizes_and_preserves_other_columns(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

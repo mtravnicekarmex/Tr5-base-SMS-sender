@@ -50,6 +50,7 @@ class GateConfig:
     phone: str
     password: str
     sheet: str
+    phone_column_index: int = GATE_PHONE_COLUMN_INDEX
 
 
 @dataclass(frozen=True)
@@ -165,7 +166,27 @@ def load_config(config_path: str | Path | None = None) -> AppConfig:
         if gate_id in gates:
             raise ConfigurationError(f"Gate {gate_id} is defined more than once.")
 
-        gates[gate_id] = GateConfig(id=gate_id, phone=phone, password=password, sheet=sheet)
+        if "phone_column_index" in gate:
+            try:
+                phone_column_index = int(gate["phone_column_index"])
+            except (ValueError, TypeError) as exc:
+                raise ConfigurationError(
+                    f"Gate {gate_id} has an invalid phone_column_index: {gate['phone_column_index']!r}"
+                ) from exc
+            if phone_column_index < 0:
+                raise ConfigurationError(
+                    f"Gate {gate_id} has a negative phone_column_index: {phone_column_index!r}"
+                )
+        else:
+            phone_column_index = GATE_PHONE_COLUMN_INDEX
+
+        gates[gate_id] = GateConfig(
+            id=gate_id,
+            phone=phone,
+            password=password,
+            sheet=sheet,
+            phone_column_index=phone_column_index,
+        )
 
     return AppConfig(gateway_base=gateway_base, excel_path=excel_path, gates=gates)
 
@@ -589,7 +610,7 @@ def poslat_davkove_sms(
     numbers = get_sheet_numbers(
         active_config,
         gate.sheet,
-        column_index=GATE_PHONE_COLUMN_INDEX,
+        column_index=gate.phone_column_index,
         deduplicate=True,
     )
     messages = build_add_messages(gate.password, numbers, batch_size=batch_size)
@@ -677,7 +698,7 @@ def najit_cisla_ze_seznamu_na_zavore(
     numbers = get_sheet_numbers(
         active_config,
         gate.sheet,
-        column_index=GATE_PHONE_COLUMN_INDEX,
+        column_index=gate.phone_column_index,
         deduplicate=True,
     )
     messages = build_find_messages(gate.password, numbers)
@@ -704,7 +725,7 @@ def najit_duplikaty(
     numbers = get_sheet_numbers(
         active_config,
         gate.sheet,
-        column_index=GATE_PHONE_COLUMN_INDEX,
+        column_index=gate.phone_column_index,
         deduplicate=False,
     )
     counts = Counter(numbers)

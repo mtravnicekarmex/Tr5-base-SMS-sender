@@ -12,3 +12,4 @@ id = 2
 phone = "+420600000002"
 password = "1234"
 sheet = "2 - Liberecka"
+phone_column_index = 2

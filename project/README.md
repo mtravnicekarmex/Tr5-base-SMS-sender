@@ -44,6 +44,10 @@ here. The project's original source, prior to migration, lives in
   the owner after installing dependencies.
 - `config.example.toml` — configuration template for the gateway
   credentials and gate sheet definitions.
+- Each gate's phone-number column is configurable per gate via an optional
+  `phone_column_index` field on its `[[gates]]` entry in `config.toml`;
+  when omitted, it defaults to the prior hardcoded column index, so an
+  existing `config.toml` without the field keeps working unchanged.
 
 ### Development environment
 
@@ -74,8 +78,6 @@ root `.gitignore`'s `config.toml` entry.
 - A `<workbook>.lock` file left behind by a process that crashes mid-save
   is not automatically cleared (no staleness/TTL recovery); such a lock
   would need to be removed manually before further saves can succeed.
-- The phone number column layout is assumed uniform across all configured
-  gate sheets, via a single global column-index constant.
 
 ## Planned evolution
 

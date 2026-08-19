@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0005
 
-Status: READY_FOR_PROGRAMMER
+Status: READY_FOR_REVIEWER
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_PROGRAMMER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `programmer`
-- Handed off to: `programmer`
+- Currently with: `reviewer`
+- Handed off to: `reviewer`
 - Created at: `2026-08-19T07:16:34+02:00`
-- Updated at: `2026-08-19T07:17:47+02:00`
+- Updated at: `2026-08-19T07:20:08+02:00`
 
 ---
 
@@ -63,11 +63,19 @@ Acceptance criteria:
 - GateConfig gains a new field `phone_column_index: int = GATE_PHONE_COLUMN_INDEX`, added after the existing id/phone/password/sheet fields
 - The dataclass remains frozen (`@dataclass(frozen=True)`) with no other field added, removed, or reordered
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-19T07:20:08+02:00._
+
+Added `phone_column_index: int = GATE_PHONE_COLUMN_INDEX` as a new field on the frozen GateConfig dataclass in project/send_sms.py, placed after the existing id/phone/password/sheet fields. No other field changed.
+
+Files touched:
+- `project/send_sms.py`
+
+Tests:
+- No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner.
 
 Reviewer's implementation review for this point:
 
@@ -83,11 +91,19 @@ Acceptance criteria:
 - When a gate's TOML entry includes 'phone_column_index' as a negative integer or a value that cannot be interpreted as an integer, load_config() raises ConfigurationError naming the offending gate
 - No existing validation or error behavior for id/phone/password/sheet is altered
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-19T07:20:08+02:00._
+
+load_config() now checks for an optional 'phone_column_index' key per [[gates]] entry: if present, it is coerced with int() (raising ConfigurationError naming the gate on TypeError/ValueError) and validated non-negative (raising ConfigurationError naming the gate if negative); if absent, it defaults to GATE_PHONE_COLUMN_INDEX. The resolved value is passed into the constructed GateConfig. Existing id/phone/password/sheet validation and error paths are untouched.
+
+Files touched:
+- `project/send_sms.py`
+
+Tests:
+- No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner.
 
 Reviewer's implementation review for this point:
 
@@ -104,11 +120,19 @@ Acceptance criteria:
 - doplneni_seznamu_zavor's call (which uses SUPPLEMENT_PHONE_COLUMN_INDEX and SUPPLEMENT_SHEET_NAME, not a gate's own sheet) is left unchanged
 - The GATE_PHONE_COLUMN_INDEX module constant itself is not removed (it remains GateConfig's default value, per the previous point)
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-19T07:20:08+02:00._
+
+poslat_davkove_sms, najit_cisla_ze_seznamu_na_zavore, and najit_duplikaty now pass column_index=gate.phone_column_index to get_sheet_numbers instead of the global GATE_PHONE_COLUMN_INDEX constant. doplneni_seznamu_zavor (SUPPLEMENT_PHONE_COLUMN_INDEX/SUPPLEMENT_SHEET_NAME) left unchanged. The GATE_PHONE_COLUMN_INDEX module constant itself remains, still serving as GateConfig's default.
+
+Files touched:
+- `project/send_sms.py`
+
+Tests:
+- No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner.
 
 Reviewer's implementation review for this point:
 
@@ -124,11 +148,19 @@ Acceptance criteria:
 - GATE_PHONE_COLUMN_INDEX no longer appears anywhere in project/streamlit_app.py, including its import from send_sms
 - SUPPLEMENT_PHONE_COLUMN_INDEX's import and its existing usage for the 'Doplnit' sheet tab are unchanged
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-19T07:20:08+02:00._
+
+Both streamlit_app.py call sites (load_analysis_cached and render_sheet_editor for the active gate's editor tab) now use selected_gate.phone_column_index. Removed the now-unused GATE_PHONE_COLUMN_INDEX import from the send_sms import block; confirmed via grep that GATE_PHONE_COLUMN_INDEX no longer appears anywhere in the file. SUPPLEMENT_PHONE_COLUMN_INDEX's import and its 'Doplnit' sheet usage are unchanged.
+
+Files touched:
+- `project/streamlit_app.py`
+
+Tests:
+- No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner.
 
 Reviewer's implementation review for this point:
 
@@ -144,11 +176,19 @@ Acceptance criteria:
 - Both tests follow the existing tempfile.TemporaryDirectory()-based config.toml fixture pattern already used by test_load_config_reads_gate_definitions, not a mocked filesystem
 - Actually executing the full test suite (13 tests total after this addition) and confirming all pass is an explicit manual follow-up for the owner, per this contract's Out of Scope, since the programmer has no Bash access to run it
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-19T07:20:08+02:00._
+
+Added test_load_config_defaults_phone_column_index_when_omitted (asserts GateConfig.phone_column_index equals imported GATE_PHONE_COLUMN_INDEX when the TOML entry omits the key) and test_load_config_reads_explicit_phone_column_index (asserts it equals 3 when the TOML entry sets phone_column_index = 3), both following the existing tempfile.TemporaryDirectory()-based config.toml fixture pattern of test_load_config_reads_gate_definitions. Added GATE_PHONE_COLUMN_INDEX to the send_sms import list. File now contains 13 test methods total (11 existing + 2 new), matching the contract's expectation. Verified by reading/tracing the test logic against the load_config() implementation, not by execution — the programmer's 'edit' permission profile has no Bash access; actually running the suite is a manual follow-up for the owner, per the contract's Out of Scope.
+
+Files touched:
+- `project/tests/test_send_sms.py`
+
+Tests:
+- No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner.
 
 Reviewer's implementation review for this point:
 
@@ -163,11 +203,19 @@ Acceptance criteria:
 - The other example gate entry is left without a 'phone_column_index' line, demonstrating the default-when-omitted behavior
 - No other field of either example gate (id, phone, password, sheet) or the top-level gateway_base/excel_path is changed
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-19T07:20:08+02:00._
+
+Added `phone_column_index = 2` to the second example gate (id 2, 'Liberecka'), an explicit override distinct from the GATE_PHONE_COLUMN_INDEX default (1). The first example gate (id 1, 'Benesovska') is left without the field, illustrating the default-when-omitted behavior. No other field of either gate or the top-level gateway_base/excel_path changed.
+
+Files touched:
+- `project/config.example.toml`
+
+Tests:
+- No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner.
 
 Reviewer's implementation review for this point:
 
@@ -183,11 +231,19 @@ Acceptance criteria:
 - The remaining 'Current limitations' bullets (missing tests for main.py/streamlit_app.py, stale-lock recovery) remain present and unaltered
 - No other section of project/README.md is modified
 
-> Status: PENDING
+> Status: IMPLEMENTED
 
 Programmer note:
 
-_Awaiting implementation._
+_By `programmer`, 2026-08-19T07:20:08+02:00._
+
+Removed the 'phone number column layout is assumed uniform...' bullet from 'Current limitations' and added a new bullet to 'Current capabilities (v0.1)' stating each gate's phone-number column is configurable via the optional phone_column_index field in config.toml, defaulting to the prior hardcoded value when omitted. The other 'Current limitations' bullets (missing main.py/streamlit_app.py tests, stale-lock recovery) remain present and unaltered. No other README.md section was touched (the pre-existing 'Planned evolution' mention of 'per-gate column configuration' and the stale '8 tests' capabilities line are untouched, as the contract restricts changes to only the one named bullet's move).
+
+Files touched:
+- `project/README.md`
+
+Tests:
+- No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner.
 
 Reviewer's implementation review for this point:
 
@@ -231,7 +287,7 @@ A Streamlit UI control for viewing/editing a gate's phone_column_index (instead 
 
 # Completion Notes
 
-_Awaiting implementation._
+Made the gate sheet's phone-number column configurable per gate via an optional phone_column_index field in config.toml, defaulting to the existing GATE_PHONE_COLUMN_INDEX constant when omitted. Updated GateConfig, load_config(), the three send_sms.py call sites, and the two streamlit_app.py call sites; added two new unit tests; updated config.example.toml and README.md accordingly. All changes confined to project/. Test execution not performed (no Bash access per contract's Out of Scope) — tests were verified by reading/tracing logic against the implementation.
 
 ---
 
@@ -251,12 +307,12 @@ _Not filled in._
 {
   "number": 5,
   "title": "Make the gate sheet's phone-number column configurable per gate",
-  "status": "READY_FOR_PROGRAMMER",
+  "status": "READY_FOR_REVIEWER",
   "created_by": "architect",
-  "assigned_to": "programmer",
-  "handoff_to": "programmer",
+  "assigned_to": "reviewer",
+  "handoff_to": "reviewer",
   "created_at": "2026-08-19T07:16:34+02:00",
-  "updated_at": "2026-08-19T07:17:47+02:00",
+  "updated_at": "2026-08-19T07:20:08+02:00",
   "points": [
     {
       "number": 1,
@@ -265,15 +321,19 @@ _Not filled in._
         "GateConfig gains a new field `phone_column_index: int = GATE_PHONE_COLUMN_INDEX`, added after the existing id/phone/password/sheet fields",
         "The dataclass remains frozen (`@dataclass(frozen=True)`) with no other field added, removed, or reordered"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Added `phone_column_index: int = GATE_PHONE_COLUMN_INDEX` as a new field on the frozen GateConfig dataclass in project/send_sms.py, placed after the existing id/phone/password/sheet fields. No other field changed.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-19T07:20:08+02:00",
+      "programmer_files": [
+        "project/send_sms.py"
+      ],
+      "programmer_tests": [
+        "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 2,
@@ -284,15 +344,19 @@ _Not filled in._
         "When a gate's TOML entry includes 'phone_column_index' as a negative integer or a value that cannot be interpreted as an integer, load_config() raises ConfigurationError naming the offending gate",
         "No existing validation or error behavior for id/phone/password/sheet is altered"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "load_config() now checks for an optional 'phone_column_index' key per [[gates]] entry: if present, it is coerced with int() (raising ConfigurationError naming the gate on TypeError/ValueError) and validated non-negative (raising ConfigurationError naming the gate if negative); if absent, it defaults to GATE_PHONE_COLUMN_INDEX. The resolved value is passed into the constructed GateConfig. Existing id/phone/password/sheet validation and error paths are untouched.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-19T07:20:08+02:00",
+      "programmer_files": [
+        "project/send_sms.py"
+      ],
+      "programmer_tests": [
+        "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 3,
@@ -304,15 +368,19 @@ _Not filled in._
         "doplneni_seznamu_zavor's call (which uses SUPPLEMENT_PHONE_COLUMN_INDEX and SUPPLEMENT_SHEET_NAME, not a gate's own sheet) is left unchanged",
         "The GATE_PHONE_COLUMN_INDEX module constant itself is not removed (it remains GateConfig's default value, per the previous point)"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "poslat_davkove_sms, najit_cisla_ze_seznamu_na_zavore, and najit_duplikaty now pass column_index=gate.phone_column_index to get_sheet_numbers instead of the global GATE_PHONE_COLUMN_INDEX constant. doplneni_seznamu_zavor (SUPPLEMENT_PHONE_COLUMN_INDEX/SUPPLEMENT_SHEET_NAME) left unchanged. The GATE_PHONE_COLUMN_INDEX module constant itself remains, still serving as GateConfig's default.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-19T07:20:08+02:00",
+      "programmer_files": [
+        "project/send_sms.py"
+      ],
+      "programmer_tests": [
+        "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 4,
@@ -323,15 +391,19 @@ _Not filled in._
         "GATE_PHONE_COLUMN_INDEX no longer appears anywhere in project/streamlit_app.py, including its import from send_sms",
         "SUPPLEMENT_PHONE_COLUMN_INDEX's import and its existing usage for the 'Doplnit' sheet tab are unchanged"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Both streamlit_app.py call sites (load_analysis_cached and render_sheet_editor for the active gate's editor tab) now use selected_gate.phone_column_index. Removed the now-unused GATE_PHONE_COLUMN_INDEX import from the send_sms import block; confirmed via grep that GATE_PHONE_COLUMN_INDEX no longer appears anywhere in the file. SUPPLEMENT_PHONE_COLUMN_INDEX's import and its 'Doplnit' sheet usage are unchanged.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-19T07:20:08+02:00",
+      "programmer_files": [
+        "project/streamlit_app.py"
+      ],
+      "programmer_tests": [
+        "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 5,
@@ -342,15 +414,19 @@ _Not filled in._
         "Both tests follow the existing tempfile.TemporaryDirectory()-based config.toml fixture pattern already used by test_load_config_reads_gate_definitions, not a mocked filesystem",
         "Actually executing the full test suite (13 tests total after this addition) and confirming all pass is an explicit manual follow-up for the owner, per this contract's Out of Scope, since the programmer has no Bash access to run it"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Added test_load_config_defaults_phone_column_index_when_omitted (asserts GateConfig.phone_column_index equals imported GATE_PHONE_COLUMN_INDEX when the TOML entry omits the key) and test_load_config_reads_explicit_phone_column_index (asserts it equals 3 when the TOML entry sets phone_column_index = 3), both following the existing tempfile.TemporaryDirectory()-based config.toml fixture pattern of test_load_config_reads_gate_definitions. Added GATE_PHONE_COLUMN_INDEX to the send_sms import list. File now contains 13 test methods total (11 existing + 2 new), matching the contract's expectation. Verified by reading/tracing the test logic against the load_config() implementation, not by execution — the programmer's 'edit' permission profile has no Bash access; actually running the suite is a manual follow-up for the owner, per the contract's Out of Scope.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-19T07:20:08+02:00",
+      "programmer_files": [
+        "project/tests/test_send_sms.py"
+      ],
+      "programmer_tests": [
+        "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 6,
@@ -360,15 +436,19 @@ _Not filled in._
         "The other example gate entry is left without a 'phone_column_index' line, demonstrating the default-when-omitted behavior",
         "No other field of either example gate (id, phone, password, sheet) or the top-level gateway_base/excel_path is changed"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Added `phone_column_index = 2` to the second example gate (id 2, 'Liberecka'), an explicit override distinct from the GATE_PHONE_COLUMN_INDEX default (1). The first example gate (id 1, 'Benesovska') is left without the field, illustrating the default-when-omitted behavior. No other field of either gate or the top-level gateway_base/excel_path changed.",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-19T07:20:08+02:00",
+      "programmer_files": [
+        "project/config.example.toml"
+      ],
+      "programmer_tests": [
+        "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     },
     {
       "number": 7,
@@ -379,15 +459,19 @@ _Not filled in._
         "The remaining 'Current limitations' bullets (missing tests for main.py/streamlit_app.py, stale-lock recovery) remain present and unaltered",
         "No other section of project/README.md is modified"
       ],
-      "programmer_note": "",
-      "programmer_note_author": "",
-      "programmer_note_at": "",
-      "programmer_files": [],
-      "programmer_tests": [],
+      "programmer_note": "Removed the 'phone number column layout is assumed uniform...' bullet from 'Current limitations' and added a new bullet to 'Current capabilities (v0.1)' stating each gate's phone-number column is configurable via the optional phone_column_index field in config.toml, defaulting to the prior hardcoded value when omitted. The other 'Current limitations' bullets (missing main.py/streamlit_app.py tests, stale-lock recovery) remain present and unaltered. No other README.md section was touched (the pre-existing 'Planned evolution' mention of 'per-gate column configuration' and the stale '8 tests' capabilities line are untouched, as the contract restricts changes to only the one named bullet's move).",
+      "programmer_note_author": "programmer",
+      "programmer_note_at": "2026-08-19T07:20:08+02:00",
+      "programmer_files": [
+        "project/README.md"
+      ],
+      "programmer_tests": [
+        "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
+      ],
       "reviewer_note": "",
       "reviewer_note_author": "",
       "reviewer_note_at": "",
-      "status": "PENDING"
+      "status": "IMPLEMENTED"
     }
   ],
   "implementer": "programmer",
@@ -410,7 +494,7 @@ _Not filled in._
       "findings": "Verified the contract's factual claims directly against project/send_sms.py, project/streamlit_app.py, project/config.example.toml, project/README.md, project/tests/test_send_sms.py, and project/main.py. All 'Current State' assertions checked out exactly: GATE_PHONE_COLUMN_INDEX = 1 and SUPPLEMENT_PHONE_COLUMN_INDEX = 0 as module constants; GateConfig is a frozen dataclass with exactly id/phone/password/sheet; load_config() parses only those four fields with no column handling; the three named functions (poslat_davkove_sms, najit_cisla_ze_seznamu_na_zavore, najit_duplikaty) pass column_index=GATE_PHONE_COLUMN_INDEX while doplneni_seznamu_zavor correctly uses SUPPLEMENT_PHONE_COLUMN_INDEX/SUPPLEMENT_SHEET_NAME instead; streamlit_app.py's three occurrences of GATE_PHONE_COLUMN_INDEX are exactly at the import (line 14) and the two call sites cited (lines 497 and 559); config.example.toml has exactly two gates with no column field; README.md's 'Current limitations' contains the cited bullet verbatim, and its own 'Planned evolution' section already lists 'per-gate column configuration' as a deferred item, confirming this is a documented, pre-existing gap being resolved rather than an invented need (satisfies P1/P15 — not a premature abstraction); main.py has zero references to GATE_PHONE_COLUMN_INDEX, confirming the Out of Scope claim about it. Counted existing tests in test_send_sms.py: 11, so the contract's 'defaulting to GATE_PHONE_COLUMN_INDEX... 13 tests total after this addition' (11+2) is arithmetically correct.\n\nChecked against AGENTS.md: all Outputs are confined to project/ (send_sms.py, streamlit_app.py, tests/test_send_sms.py, config.example.toml, README.md) — no framework layer (agents/*.py, chat_architect.py) or governance .md file is touched, matching the project/-scoping rule (ADR-022) without needing an explicit contract point for anything outside project/. Backward compatibility is explicit and correct: the new field's default equals the existing hardcoded constant, so an unmodified config.toml behaves identically — no unjustified break. Out of Scope explicitly excludes SUPPLEMENT_PHONE_COLUMN_INDEX/'Doplnit' sheet, a Streamlit UI control, main.py, and test execution (correctly citing the programmer's 'edit' permission profile has no Bash access, consistent with IMPLEMENTATION_CONTRACT_0002/0003 precedent per the project's own established pattern) — no destructive commands or access beyond 'edit' are required anywhere in the seven points. No new file/directory names are proposed, so the naming-convention check is not applicable.\n\nEach of the 7 points has an actionable, independently verifiable acceptance criterion, in a sensible dependency order (dataclass field -> config parsing -> call-site updates -> UI call-site updates -> tests -> example config -> docs). Point 2's validation criteria (non-negative integer, ConfigurationError naming the offending gate on a negative or non-integer value) is unambiguous enough to implement without further architectural decisions, consistent with the existing int(gate['id']) pattern already in load_config().\n\nRisk-level check (Tr5-base decision 7): this change touches only config-schema parsing and internal call sites — no real credentials/API keys are introduced or altered, no new external-system calls, no native/hardware libraries, and no risk of landing personal/real data in git (config.toml itself stays gitignored, unchanged by this contract). 'standard' risk_level is correctly assigned; no escalation warranted.\n\nNo defects found. Contract may proceed to the programmer as written."
     }
   ],
-  "completion_notes": "",
+  "completion_notes": "Made the gate sheet's phone-number column configurable per gate via an optional phone_column_index field in config.toml, defaulting to the existing GATE_PHONE_COLUMN_INDEX constant when omitted. Updated GateConfig, load_config(), the three send_sms.py call sites, and the two streamlit_app.py call sites; added two new unit tests; updated config.example.toml and README.md accordingly. All changes confined to project/. Test execution not performed (no Bash access per contract's Out of Scope) — tests were verified by reading/tracing logic against the implementation.",
   "implementation_review_rounds": []
 }
 CONTRACT-META -->

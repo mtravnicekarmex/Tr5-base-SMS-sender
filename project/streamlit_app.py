@@ -11,7 +11,6 @@ from send_sms import (
     DEFAULT_ADD_DELAY_SECONDS,
     DEFAULT_FIND_DELAY_SECONDS,
     DEFAULT_SEND_TIMEOUT,
-    GATE_PHONE_COLUMN_INDEX,
     SUPPLEMENT_PHONE_COLUMN_INDEX,
     SUPPLEMENT_SHEET_NAME,
     AppConfig,
@@ -494,7 +493,7 @@ def main() -> None:
         gate_analysis = load_analysis_cached(
             config_path,
             selected_gate.sheet,
-            GATE_PHONE_COLUMN_INDEX,
+            selected_gate.phone_column_index,
         )
         gate_error = None
     except SpreadsheetError as exc:
@@ -556,7 +555,7 @@ def main() -> None:
                 config=config,
                 title=f"Editor seznamu pro {selected_gate.sheet}",
                 sheet_name=selected_gate.sheet,
-                column_index=GATE_PHONE_COLUMN_INDEX,
+                column_index=selected_gate.phone_column_index,
                 analysis=gate_analysis,
                 error_message=gate_error,
                 editor_key=f"editor_gate_{selected_gate.id}",
