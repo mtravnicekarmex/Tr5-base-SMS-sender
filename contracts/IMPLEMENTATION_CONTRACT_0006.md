@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0006
 
-Status: READY_FOR_REVIEWER
+Status: APPROVED
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_REVIEWER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `reviewer`
-- Handed off to: `reviewer`
+- Currently with: `owner`
+- Handed off to: `owner`
 - Created at: `2026-08-19T14:41:41+02:00`
-- Updated at: `2026-08-19T14:47:57+02:00`
+- Updated at: `2026-08-19T14:49:48+02:00`
 
 ---
 
@@ -65,7 +65,7 @@ Acceptance criteria:
 - The `if __name__ == "__main__": raise SystemExit(main())` block at the bottom of the file is unchanged, so running the script directly still reads real sys.argv exactly as before
 - No other line of main.py is changed by this point
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -81,7 +81,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T14:49:48+02:00._
+
+main.py line 121: `def main(argv: Sequence[str] | None = None) -> int`; line 123: `args = parser.parse_args(argv)`. `Sequence` was already imported (line 7). Lines 194-195 `if __name__ == "__main__": raise SystemExit(main())` are byte-for-byte unchanged. Full-file read confirms no other line was touched. Matches the point's acceptance criteria exactly.
 
 ## Point 2
 
@@ -93,7 +95,7 @@ Acceptance criteria:
 - A test confirms the duplicates subcommand's parser does not define a --timeout argument (parsing `duplicates --gate 1 --timeout 5` raises SystemExit/an argparse error)
 - A test confirms each subcommand's required arguments (e.g. --phone/--message for send, --gate for the others, --number for find-one) raise SystemExit when omitted, consistent with argparse's required=True behavior
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -109,7 +111,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T14:49:48+02:00._
+
+test_main.py's BuildParserTests (18 tests) covers all six subcommands. Defaults verified against actual main.py: send-batch/supplement batch_size=10, pause_seconds=45.0; find-sheet pause_seconds=20.0; dry_run=False, continue_on_error=False, timeout=DEFAULT_SEND_TIMEOUT everywhere it applies — all match the real build_parser() code read directly. --timeout override tests present for send/send-batch/supplement/find-one/find-sheet. duplicates' parser correctly has no --timeout attribute (test_duplicates_defaults asserts `not hasattr(args, 'timeout')`) and test_duplicates_rejects_timeout confirms passing --timeout raises SystemExit (argparse unrecognized-argument error), matching the real duplicates_parser which only defines --gate. Required-field omission tests (phone/message, gate, gate+number) all correctly wrapped in redirect_stderr and assertRaises(SystemExit), consistent with argparse's required=True behavior.
 
 ## Point 3
 
@@ -122,7 +126,7 @@ Acceptance criteria:
 - At least one test asserts that when the mocked function raises ConfigurationError, SpreadsheetError, or ValueError, main() returns 2
 - Every test in this point invokes main() through its argv parameter (not by mutating sys.argv) and never calls a real, unmocked send_sms function
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -138,7 +142,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T14:49:48+02:00._
+
+MainDispatchTests (17 tests) patches each of the six imported send_sms functions via patch.object(main, ...) and invokes exclusively through the `_run_main` helper which calls `main.main(argv)` — never mutates sys.argv, never calls an unmocked send_sms function. Cross-checked every mock.assert_called_once_with(...) against main.py's actual call sites (e.g. poslat_davkove_sms's stop_on_error=not args.continue_on_error, config_path=args.config, timeout=args.timeout — all keyword names and positional gate argument match exactly) and against send_sms.py's real function signatures (poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, najit_cisla_ze_seznamu_na_zavore, najit_duplikaty all confirmed keyword-only after the required positional args, matching test call shapes). send/send-batch/supplement/find-one/find-sheet each have an ok=True->0 and ok=False->1 test. duplicates has two tests (non-empty and empty list) both asserting return 0, matching main.py's duplicates branch which never checks 'ok'. Three tests (ConfigurationError, SpreadsheetError, ValueError) each confirm exit code 2, matching main.py's except clause exactly.
 
 ## Point 4
 
@@ -150,7 +156,7 @@ Acceptance criteria:
 - No other module-level statement in streamlit_app.py executes a Streamlit command outside a function body or this guard (confirmed by reading the full file)
 - No function body, argument, or behavior elsewhere in streamlit_app.py is changed by this point
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -166,7 +172,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T14:49:48+02:00._
+
+streamlit_app.py: the module-level st.set_page_config() call no longer appears between imports and inject_styles() (confirmed by reading the full file top to bottom). Lines 810-815 now read `if __name__ == "__main__": st.set_page_config(page_title="Sprava GSM zavor", layout="wide"); main()` — set_page_config immediately followed by main(), in that order. A full-file read confirms every other `st.*` call lives inside a function body (inject_styles, load_config_cached, render_hero, run_messages_ui, render_sheet_health, render_flash_message, render_sheet_editor, main) or this guard — no other bare module-level Streamlit statement exists. No function body, argument, or other behavior was altered.
 
 ## Point 5
 
@@ -180,7 +188,7 @@ Acceptance criteria:
 - A test for messages_dataframe asserts the returned DataFrame has 1-based 'poradi' values and a 'prikaz_sms' column matching the input message list
 - A test for results_dataframe asserts the returned DataFrame's columns (ok, telefon, zprava, status_code, chyba, odpoved) match a given list of SmsResult objects, including one with a non-None payload serialized into 'odpoved'
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -196,7 +204,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T14:49:48+02:00._
+
+test_streamlit_app.py imports `streamlit_app` directly (safe post-Point-4) plus GateConfig/SheetAnalysis/SheetRow/SmsResult from send_sms, whose field names (id/phone/password/sheet; row_number/raw_value/normalized/status/error; ok/phone/message/status_code/payload/error) were verified against the actual dataclass definitions in send_sms.py and match exactly. gate_label test asserts '3: 3 - Namesti' matching the real f'{gate.id}: {gate.sheet}' implementation. rows_dataframe test asserts the exact column list (radek, puvodni_hodnota, normalizovane_cislo, stav, chyba) against a 4-row fixture (valid/duplicate/invalid/blank) and a statuses filter test correctly returns only 2 rows. editable_numbers_dataframe test asserts a single 'telefon' column of 3 values (blank excluded), using normalized where present and raw for the invalid row, matching `row.normalized or row.raw_value for row in analysis.rows if row.status != 'blank'`. messages_dataframe test asserts 1-based poradi and matching prikaz_sms values. results_dataframe test asserts the exact column list (ok, telefon, zprava, status_code, chyba, odpoved), a payload correctly serialized via json.dumps into 'odpoved', and an errored/no-payload result yielding odpoved=''.
 
 ## Point 6
 
@@ -208,7 +218,7 @@ Acceptance criteria:
 - The 'Current limitations' section contains a new, narrower bullet stating that streamlit_app.py's Streamlit-dependent rendering/interaction code (tabs, forms, session state, widgets, main()) remains untested, and that covering it is deferred to a possible future contract
 - The other existing 'Current limitations' bullet (stale-lock recovery) remains present and unaltered, and no other section of project/README.md is modified
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -224,7 +234,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T14:49:48+02:00._
+
+README.md's 'Current limitations' no longer contains the original 'No automated tests exist for main.py ... or for streamlit_app.py' bullet. 'Current capabilities (v0.1)' gained two new bullets describing exactly what test_main.py and test_streamlit_app.py cover, matching the actual test content verified above. 'Current limitations' gained a new, narrower bullet naming streamlit_app.py's Streamlit-dependent rendering/interaction code (tabs, forms, session-state handling, widgets, main()) as untested and deferred. The pre-existing stale-lock-recovery limitation bullet is present and unaltered. No other README section (Purpose, Development environment, Planned evolution) was modified. The pre-existing '8 tests' text on the test_send_sms.py bullet was correctly left untouched, consistent with this being outside this contract's scope (already noted as such in the accepted Architecture Review).
 
 ---
 
@@ -280,7 +292,11 @@ Implemented all 6 points of IMPLEMENTATION_CONTRACT_0006. Added an optional argv
 
 # Implementation Review
 
-_Awaiting implementation review._
+### Round 1 — 2026-08-19T14:49:48+02:00 — Verdict: APPROVED — Reviewer: `reviewer`
+
+All 6 points of IMPLEMENTATION_CONTRACT_0006 are correctly implemented and verified against actual source. main.py's main() gains an optional argv parameter (default None, parser.parse_args(argv)) with zero other line changes; project/tests/test_main.py provides full build_parser() coverage (defaults, required-field SystemExit, --timeout override/absence) for all six subcommands and full dispatch coverage (all six send_sms functions patched via patch.object, argv-only invocation, success/failure exit codes, duplicates' always-0 behavior, exception-to-exit-2 mapping) — every mock call assertion was checked line-by-line against main.py's actual positional/keyword call shapes and against send_sms.py's actual function signatures, and all match exactly. streamlit_app.py's module-level st.set_page_config() call was correctly relocated inside `if __name__ == "__main__":`, immediately before main(), with no other line touched (confirmed no other module-level `st.*` call exists). project/tests/test_streamlit_app.py directly imports streamlit_app (now import-safe post-Point-4) and covers all five named pure helpers with fixtures built from send_sms's real dataclasses (GateConfig, SheetAnalysis, SheetRow, SmsResult), whose field names were verified against the actual dataclass definitions. project/README.md correctly moves the resolved limitation bullet into 'Current capabilities' as two new bullets and replaces it with a narrower, correctly-scoped residual limitation bullet; the stale-lock bullet and all other README sections are unchanged.
+
+Out of Scope check: OK — Discovery diff lists: added project/tests/test_main.py and project/tests/test_streamlit_app.py (exactly the two new test files the contract's Outputs section calls for); changed project/README.md, project/main.py, project/streamlit_app.py (exactly the three modified files the contract's Outputs section calls for, and content-checked above to confirm each change is in-scope and no unrelated line was touched); changed agents/architect/WORKING_STATE.md and agents/programmer/runtime/session.log, both confirmed to be auto-generated framework bookkeeping files (WORKING_STATE.md's own header states 'Generated automatically from the live contract queue on every state change ... do not edit by hand') produced as a side effect of the contract pipeline transitioning this contract's status, not manual programmer edits and not governed by this contract's Outputs section. No send_sms.py change, no new third-party dependency, no test-suite execution by the programmer, and no other file creation beyond the contract's stated Outputs.
 
 ---
 
@@ -294,12 +310,12 @@ _Not filled in._
 {
   "number": 6,
   "title": "Add automated test coverage for main.py and streamlit_app.py's pure helpers",
-  "status": "READY_FOR_REVIEWER",
+  "status": "APPROVED",
   "created_by": "architect",
-  "assigned_to": "reviewer",
-  "handoff_to": "reviewer",
+  "assigned_to": "owner",
+  "handoff_to": "owner",
   "created_at": "2026-08-19T14:41:41+02:00",
-  "updated_at": "2026-08-19T14:47:57+02:00",
+  "updated_at": "2026-08-19T14:49:48+02:00",
   "points": [
     {
       "number": 1,
@@ -319,10 +335,10 @@ _Not filled in._
       "programmer_tests": [
         "No tests were executed by the programmer, per the contract's explicit Out-of-Scope instruction (permission_profile 'edit' has no Bash access to run python -m unittest/pytest). All 35 new test cases across test_main.py and test_streamlit_app.py were verified by manually tracing each test's logic line-by-line against the real implementations of project/main.py, project/streamlit_app.py, and project/send_sms.py (argument names/types/defaults, dispatch keyword-argument shapes, dataclass field names). Running the full suite (13 existing test_send_sms.py tests plus the new tests) to confirm they all actually pass remains a manual follow-up for the owner, per the established precedent from contracts 0002/0003/0005."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "main.py line 121: `def main(argv: Sequence[str] | None = None) -> int`; line 123: `args = parser.parse_args(argv)`. `Sequence` was already imported (line 7). Lines 194-195 `if __name__ == \"__main__\": raise SystemExit(main())` are byte-for-byte unchanged. Full-file read confirms no other line was touched. Matches the point's acceptance criteria exactly.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T14:49:48+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 2,
@@ -342,10 +358,10 @@ _Not filled in._
       "programmer_tests": [
         "No tests were executed by the programmer, per the contract's explicit Out-of-Scope instruction (permission_profile 'edit' has no Bash access to run python -m unittest/pytest). All 35 new test cases across test_main.py and test_streamlit_app.py were verified by manually tracing each test's logic line-by-line against the real implementations of project/main.py, project/streamlit_app.py, and project/send_sms.py (argument names/types/defaults, dispatch keyword-argument shapes, dataclass field names). Running the full suite (13 existing test_send_sms.py tests plus the new tests) to confirm they all actually pass remains a manual follow-up for the owner, per the established precedent from contracts 0002/0003/0005."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "test_main.py's BuildParserTests (18 tests) covers all six subcommands. Defaults verified against actual main.py: send-batch/supplement batch_size=10, pause_seconds=45.0; find-sheet pause_seconds=20.0; dry_run=False, continue_on_error=False, timeout=DEFAULT_SEND_TIMEOUT everywhere it applies — all match the real build_parser() code read directly. --timeout override tests present for send/send-batch/supplement/find-one/find-sheet. duplicates' parser correctly has no --timeout attribute (test_duplicates_defaults asserts `not hasattr(args, 'timeout')`) and test_duplicates_rejects_timeout confirms passing --timeout raises SystemExit (argparse unrecognized-argument error), matching the real duplicates_parser which only defines --gate. Required-field omission tests (phone/message, gate, gate+number) all correctly wrapped in redirect_stderr and assertRaises(SystemExit), consistent with argparse's required=True behavior.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T14:49:48+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 3,
@@ -366,10 +382,10 @@ _Not filled in._
       "programmer_tests": [
         "No tests were executed by the programmer, per the contract's explicit Out-of-Scope instruction (permission_profile 'edit' has no Bash access to run python -m unittest/pytest). All 35 new test cases across test_main.py and test_streamlit_app.py were verified by manually tracing each test's logic line-by-line against the real implementations of project/main.py, project/streamlit_app.py, and project/send_sms.py (argument names/types/defaults, dispatch keyword-argument shapes, dataclass field names). Running the full suite (13 existing test_send_sms.py tests plus the new tests) to confirm they all actually pass remains a manual follow-up for the owner, per the established precedent from contracts 0002/0003/0005."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "MainDispatchTests (17 tests) patches each of the six imported send_sms functions via patch.object(main, ...) and invokes exclusively through the `_run_main` helper which calls `main.main(argv)` — never mutates sys.argv, never calls an unmocked send_sms function. Cross-checked every mock.assert_called_once_with(...) against main.py's actual call sites (e.g. poslat_davkove_sms's stop_on_error=not args.continue_on_error, config_path=args.config, timeout=args.timeout — all keyword names and positional gate argument match exactly) and against send_sms.py's real function signatures (poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, najit_cisla_ze_seznamu_na_zavore, najit_duplikaty all confirmed keyword-only after the required positional args, matching test call shapes). send/send-batch/supplement/find-one/find-sheet each have an ok=True->0 and ok=False->1 test. duplicates has two tests (non-empty and empty list) both asserting return 0, matching main.py's duplicates branch which never checks 'ok'. Three tests (ConfigurationError, SpreadsheetError, ValueError) each confirm exit code 2, matching main.py's except clause exactly.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T14:49:48+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 4,
@@ -389,10 +405,10 @@ _Not filled in._
       "programmer_tests": [
         "No tests were executed by the programmer, per the contract's explicit Out-of-Scope instruction (permission_profile 'edit' has no Bash access to run python -m unittest/pytest). All 35 new test cases across test_main.py and test_streamlit_app.py were verified by manually tracing each test's logic line-by-line against the real implementations of project/main.py, project/streamlit_app.py, and project/send_sms.py (argument names/types/defaults, dispatch keyword-argument shapes, dataclass field names). Running the full suite (13 existing test_send_sms.py tests plus the new tests) to confirm they all actually pass remains a manual follow-up for the owner, per the established precedent from contracts 0002/0003/0005."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "streamlit_app.py: the module-level st.set_page_config() call no longer appears between imports and inject_styles() (confirmed by reading the full file top to bottom). Lines 810-815 now read `if __name__ == \"__main__\": st.set_page_config(page_title=\"Sprava GSM zavor\", layout=\"wide\"); main()` — set_page_config immediately followed by main(), in that order. A full-file read confirms every other `st.*` call lives inside a function body (inject_styles, load_config_cached, render_hero, run_messages_ui, render_sheet_health, render_flash_message, render_sheet_editor, main) or this guard — no other bare module-level Streamlit statement exists. No function body, argument, or other behavior was altered.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T14:49:48+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 5,
@@ -414,10 +430,10 @@ _Not filled in._
       "programmer_tests": [
         "No tests were executed by the programmer, per the contract's explicit Out-of-Scope instruction (permission_profile 'edit' has no Bash access to run python -m unittest/pytest). All 35 new test cases across test_main.py and test_streamlit_app.py were verified by manually tracing each test's logic line-by-line against the real implementations of project/main.py, project/streamlit_app.py, and project/send_sms.py (argument names/types/defaults, dispatch keyword-argument shapes, dataclass field names). Running the full suite (13 existing test_send_sms.py tests plus the new tests) to confirm they all actually pass remains a manual follow-up for the owner, per the established precedent from contracts 0002/0003/0005."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "test_streamlit_app.py imports `streamlit_app` directly (safe post-Point-4) plus GateConfig/SheetAnalysis/SheetRow/SmsResult from send_sms, whose field names (id/phone/password/sheet; row_number/raw_value/normalized/status/error; ok/phone/message/status_code/payload/error) were verified against the actual dataclass definitions in send_sms.py and match exactly. gate_label test asserts '3: 3 - Namesti' matching the real f'{gate.id}: {gate.sheet}' implementation. rows_dataframe test asserts the exact column list (radek, puvodni_hodnota, normalizovane_cislo, stav, chyba) against a 4-row fixture (valid/duplicate/invalid/blank) and a statuses filter test correctly returns only 2 rows. editable_numbers_dataframe test asserts a single 'telefon' column of 3 values (blank excluded), using normalized where present and raw for the invalid row, matching `row.normalized or row.raw_value for row in analysis.rows if row.status != 'blank'`. messages_dataframe test asserts 1-based poradi and matching prikaz_sms values. results_dataframe test asserts the exact column list (ok, telefon, zprava, status_code, chyba, odpoved), a payload correctly serialized via json.dumps into 'odpoved', and an errored/no-payload result yielding odpoved=''.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T14:49:48+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 6,
@@ -437,10 +453,10 @@ _Not filled in._
       "programmer_tests": [
         "No tests were executed by the programmer, per the contract's explicit Out-of-Scope instruction (permission_profile 'edit' has no Bash access to run python -m unittest/pytest). All 35 new test cases across test_main.py and test_streamlit_app.py were verified by manually tracing each test's logic line-by-line against the real implementations of project/main.py, project/streamlit_app.py, and project/send_sms.py (argument names/types/defaults, dispatch keyword-argument shapes, dataclass field names). Running the full suite (13 existing test_send_sms.py tests plus the new tests) to confirm they all actually pass remains a manual follow-up for the owner, per the established precedent from contracts 0002/0003/0005."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "README.md's 'Current limitations' no longer contains the original 'No automated tests exist for main.py ... or for streamlit_app.py' bullet. 'Current capabilities (v0.1)' gained two new bullets describing exactly what test_main.py and test_streamlit_app.py cover, matching the actual test content verified above. 'Current limitations' gained a new, narrower bullet naming streamlit_app.py's Streamlit-dependent rendering/interaction code (tabs, forms, session-state handling, widgets, main()) as untested and deferred. The pre-existing stale-lock-recovery limitation bullet is present and unaltered. No other README section (Purpose, Development environment, Planned evolution) was modified. The pre-existing '8 tests' text on the test_send_sms.py bullet was correctly left untouched, consistent with this being outside this contract's scope (already noted as such in the accepted Architecture Review).",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T14:49:48+02:00",
+      "status": "APPROVED"
     }
   ],
   "implementer": "programmer",
@@ -464,6 +480,48 @@ _Not filled in._
     }
   ],
   "completion_notes": "Implemented all 6 points of IMPLEMENTATION_CONTRACT_0006. Added an optional argv parameter to main.py's main() (default None preserves current sys.argv-reading behavior); added project/tests/test_main.py with full build_parser() coverage (defaults, required-argument SystemExit checks, --timeout override/absence across all six subcommands) and main() dispatch coverage (all six send_sms functions mocked via unittest.mock.patch.object, success/failure exit codes, duplicates' always-0 behavior, and exception-to-exit-code-2 mapping for ConfigurationError/SpreadsheetError/ValueError); relocated streamlit_app.py's module-level st.set_page_config() call into the existing `if __name__ == \"__main__\":` guard immediately before main(); added project/tests/test_streamlit_app.py covering the five named pure helper functions (gate_label, rows_dataframe, editable_numbers_dataframe, messages_dataframe, results_dataframe) by importing streamlit_app directly and constructing send_sms dataclasses (GateConfig, SheetAnalysis, SheetRow, SmsResult) as synthetic fixtures; updated project/README.md moving the resolved test-coverage limitation into 'Current capabilities (v0.1)' as two new bullets and replacing it in 'Current limitations' with a narrower bullet naming the still-untested Streamlit-dependent rendering/interaction code, deferred to a possible future contract. Per the contract's explicit Out-of-Scope instruction, the test suite was not executed by the programmer (permission_profile 'edit' has no Bash access); all new tests were verified by reading and tracing their logic against the actual implementation of main.py, streamlit_app.py, and send_sms.py line by line, matching argument names, defaults, dataclass field names, and control-flow branches exactly as they exist in the current source. No architectural gaps or ambiguities were encountered — every point had unambiguous, concrete acceptance criteria traceable to real code shapes.",
-  "implementation_review_rounds": []
+  "implementation_review_rounds": [
+    {
+      "round": 1,
+      "date": "2026-08-19T14:49:48+02:00",
+      "verdict": "APPROVED",
+      "reviewer": "reviewer",
+      "summary": "All 6 points of IMPLEMENTATION_CONTRACT_0006 are correctly implemented and verified against actual source. main.py's main() gains an optional argv parameter (default None, parser.parse_args(argv)) with zero other line changes; project/tests/test_main.py provides full build_parser() coverage (defaults, required-field SystemExit, --timeout override/absence) for all six subcommands and full dispatch coverage (all six send_sms functions patched via patch.object, argv-only invocation, success/failure exit codes, duplicates' always-0 behavior, exception-to-exit-2 mapping) — every mock call assertion was checked line-by-line against main.py's actual positional/keyword call shapes and against send_sms.py's actual function signatures, and all match exactly. streamlit_app.py's module-level st.set_page_config() call was correctly relocated inside `if __name__ == \"__main__\":`, immediately before main(), with no other line touched (confirmed no other module-level `st.*` call exists). project/tests/test_streamlit_app.py directly imports streamlit_app (now import-safe post-Point-4) and covers all five named pure helpers with fixtures built from send_sms's real dataclasses (GateConfig, SheetAnalysis, SheetRow, SmsResult), whose field names were verified against the actual dataclass definitions. project/README.md correctly moves the resolved limitation bullet into 'Current capabilities' as two new bullets and replaces it with a narrower, correctly-scoped residual limitation bullet; the stale-lock bullet and all other README sections are unchanged.",
+      "out_of_scope_ok": true,
+      "out_of_scope_findings": "Discovery diff lists: added project/tests/test_main.py and project/tests/test_streamlit_app.py (exactly the two new test files the contract's Outputs section calls for); changed project/README.md, project/main.py, project/streamlit_app.py (exactly the three modified files the contract's Outputs section calls for, and content-checked above to confirm each change is in-scope and no unrelated line was touched); changed agents/architect/WORKING_STATE.md and agents/programmer/runtime/session.log, both confirmed to be auto-generated framework bookkeeping files (WORKING_STATE.md's own header states 'Generated automatically from the live contract queue on every state change ... do not edit by hand') produced as a side effect of the contract pipeline transitioning this contract's status, not manual programmer edits and not governed by this contract's Outputs section. No send_sms.py change, no new third-party dependency, no test-suite execution by the programmer, and no other file creation beyond the contract's stated Outputs.",
+      "reviews": [
+        {
+          "point": 1,
+          "status": "APPROVED",
+          "review": "main.py line 121: `def main(argv: Sequence[str] | None = None) -> int`; line 123: `args = parser.parse_args(argv)`. `Sequence` was already imported (line 7). Lines 194-195 `if __name__ == \"__main__\": raise SystemExit(main())` are byte-for-byte unchanged. Full-file read confirms no other line was touched. Matches the point's acceptance criteria exactly."
+        },
+        {
+          "point": 2,
+          "status": "APPROVED",
+          "review": "test_main.py's BuildParserTests (18 tests) covers all six subcommands. Defaults verified against actual main.py: send-batch/supplement batch_size=10, pause_seconds=45.0; find-sheet pause_seconds=20.0; dry_run=False, continue_on_error=False, timeout=DEFAULT_SEND_TIMEOUT everywhere it applies — all match the real build_parser() code read directly. --timeout override tests present for send/send-batch/supplement/find-one/find-sheet. duplicates' parser correctly has no --timeout attribute (test_duplicates_defaults asserts `not hasattr(args, 'timeout')`) and test_duplicates_rejects_timeout confirms passing --timeout raises SystemExit (argparse unrecognized-argument error), matching the real duplicates_parser which only defines --gate. Required-field omission tests (phone/message, gate, gate+number) all correctly wrapped in redirect_stderr and assertRaises(SystemExit), consistent with argparse's required=True behavior."
+        },
+        {
+          "point": 3,
+          "status": "APPROVED",
+          "review": "MainDispatchTests (17 tests) patches each of the six imported send_sms functions via patch.object(main, ...) and invokes exclusively through the `_run_main` helper which calls `main.main(argv)` — never mutates sys.argv, never calls an unmocked send_sms function. Cross-checked every mock.assert_called_once_with(...) against main.py's actual call sites (e.g. poslat_davkove_sms's stop_on_error=not args.continue_on_error, config_path=args.config, timeout=args.timeout — all keyword names and positional gate argument match exactly) and against send_sms.py's real function signatures (poslat_sms, poslat_davkove_sms, doplneni_seznamu_zavor, najit_cislo_na_zavore, najit_cisla_ze_seznamu_na_zavore, najit_duplikaty all confirmed keyword-only after the required positional args, matching test call shapes). send/send-batch/supplement/find-one/find-sheet each have an ok=True->0 and ok=False->1 test. duplicates has two tests (non-empty and empty list) both asserting return 0, matching main.py's duplicates branch which never checks 'ok'. Three tests (ConfigurationError, SpreadsheetError, ValueError) each confirm exit code 2, matching main.py's except clause exactly."
+        },
+        {
+          "point": 4,
+          "status": "APPROVED",
+          "review": "streamlit_app.py: the module-level st.set_page_config() call no longer appears between imports and inject_styles() (confirmed by reading the full file top to bottom). Lines 810-815 now read `if __name__ == \"__main__\": st.set_page_config(page_title=\"Sprava GSM zavor\", layout=\"wide\"); main()` — set_page_config immediately followed by main(), in that order. A full-file read confirms every other `st.*` call lives inside a function body (inject_styles, load_config_cached, render_hero, run_messages_ui, render_sheet_health, render_flash_message, render_sheet_editor, main) or this guard — no other bare module-level Streamlit statement exists. No function body, argument, or other behavior was altered."
+        },
+        {
+          "point": 5,
+          "status": "APPROVED",
+          "review": "test_streamlit_app.py imports `streamlit_app` directly (safe post-Point-4) plus GateConfig/SheetAnalysis/SheetRow/SmsResult from send_sms, whose field names (id/phone/password/sheet; row_number/raw_value/normalized/status/error; ok/phone/message/status_code/payload/error) were verified against the actual dataclass definitions in send_sms.py and match exactly. gate_label test asserts '3: 3 - Namesti' matching the real f'{gate.id}: {gate.sheet}' implementation. rows_dataframe test asserts the exact column list (radek, puvodni_hodnota, normalizovane_cislo, stav, chyba) against a 4-row fixture (valid/duplicate/invalid/blank) and a statuses filter test correctly returns only 2 rows. editable_numbers_dataframe test asserts a single 'telefon' column of 3 values (blank excluded), using normalized where present and raw for the invalid row, matching `row.normalized or row.raw_value for row in analysis.rows if row.status != 'blank'`. messages_dataframe test asserts 1-based poradi and matching prikaz_sms values. results_dataframe test asserts the exact column list (ok, telefon, zprava, status_code, chyba, odpoved), a payload correctly serialized via json.dumps into 'odpoved', and an errored/no-payload result yielding odpoved=''."
+        },
+        {
+          "point": 6,
+          "status": "APPROVED",
+          "review": "README.md's 'Current limitations' no longer contains the original 'No automated tests exist for main.py ... or for streamlit_app.py' bullet. 'Current capabilities (v0.1)' gained two new bullets describing exactly what test_main.py and test_streamlit_app.py cover, matching the actual test content verified above. 'Current limitations' gained a new, narrower bullet naming streamlit_app.py's Streamlit-dependent rendering/interaction code (tabs, forms, session-state handling, widgets, main()) as untested and deferred. The pre-existing stale-lock-recovery limitation bullet is present and unaltered. No other README section (Purpose, Development environment, Planned evolution) was modified. The pre-existing '8 tests' text on the test_send_sms.py bullet was correctly left untouched, consistent with this being outside this contract's scope (already noted as such in the accepted Architecture Review)."
+        }
+      ]
+    }
+  ]
 }
 CONTRACT-META -->
