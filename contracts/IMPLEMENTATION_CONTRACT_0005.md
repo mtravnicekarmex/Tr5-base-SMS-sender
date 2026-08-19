@@ -1,6 +1,6 @@
 # IMPLEMENTATION_CONTRACT_0005
 
-Status: READY_FOR_REVIEWER
+Status: APPROVED
 
 ---
 
@@ -10,10 +10,10 @@ Status: READY_FOR_REVIEWER
 - Reviewer (both review gates): `reviewer`
 - Implementer: `programmer`
 - Risk level: `standard`
-- Currently with: `reviewer`
-- Handed off to: `reviewer`
+- Currently with: `owner`
+- Handed off to: `owner`
 - Created at: `2026-08-19T07:16:34+02:00`
-- Updated at: `2026-08-19T07:20:08+02:00`
+- Updated at: `2026-08-19T07:21:52+02:00`
 
 ---
 
@@ -63,7 +63,7 @@ Acceptance criteria:
 - GateConfig gains a new field `phone_column_index: int = GATE_PHONE_COLUMN_INDEX`, added after the existing id/phone/password/sheet fields
 - The dataclass remains frozen (`@dataclass(frozen=True)`) with no other field added, removed, or reordered
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -79,7 +79,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T07:21:52+02:00._
+
+project/send_sms.py:53 — GateConfig now has `phone_column_index: int = GATE_PHONE_COLUMN_INDEX` added after id/phone/password/sheet, dataclass remains `@dataclass(frozen=True)` with no other field changed, added, or reordered. Matches both acceptance criteria exactly.
 
 ## Point 2
 
@@ -91,7 +93,7 @@ Acceptance criteria:
 - When a gate's TOML entry includes 'phone_column_index' as a negative integer or a value that cannot be interpreted as an integer, load_config() raises ConfigurationError naming the offending gate
 - No existing validation or error behavior for id/phone/password/sheet is altered
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -107,7 +109,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T07:21:52+02:00._
+
+project/send_sms.py:169-189 — load_config() checks `if 'phone_column_index' in gate`: coerces with int(), catching (ValueError, TypeError) and raising ConfigurationError naming the gate (line 173-175); validates non-negative, raising ConfigurationError naming the gate if negative (line 176-179); defaults to GATE_PHONE_COLUMN_INDEX when absent (line 180-181); resolved value passed into the constructed GateConfig (line 188). All existing id/phone/password/sheet validation (lines 154-167) is untouched. All 4 acceptance criteria verified.
 
 ## Point 3
 
@@ -120,7 +124,7 @@ Acceptance criteria:
 - doplneni_seznamu_zavor's call (which uses SUPPLEMENT_PHONE_COLUMN_INDEX and SUPPLEMENT_SHEET_NAME, not a gate's own sheet) is left unchanged
 - The GATE_PHONE_COLUMN_INDEX module constant itself is not removed (it remains GateConfig's default value, per the previous point)
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -136,7 +140,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T07:21:52+02:00._
+
+poslat_davkove_sms (line 613), najit_cisla_ze_seznamu_na_zavore (line 701), and najit_duplikaty (line 728) all pass column_index=gate.phone_column_index. doplneni_seznamu_zavor (line 645) still uses SUPPLEMENT_PHONE_COLUMN_INDEX/SUPPLEMENT_SHEET_NAME, unchanged. GATE_PHONE_COLUMN_INDEX module constant remains defined at line 30, still serving as GateConfig's default. All 5 acceptance criteria verified.
 
 ## Point 4
 
@@ -148,7 +154,7 @@ Acceptance criteria:
 - GATE_PHONE_COLUMN_INDEX no longer appears anywhere in project/streamlit_app.py, including its import from send_sms
 - SUPPLEMENT_PHONE_COLUMN_INDEX's import and its existing usage for the 'Doplnit' sheet tab are unchanged
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -164,7 +170,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T07:21:52+02:00._
+
+streamlit_app.py line 496: load_analysis_cached call now passes selected_gate.phone_column_index positionally. Line 558: render_sheet_editor call now passes column_index=selected_gate.phone_column_index. Grep for GATE_PHONE_COLUMN_INDEX across the whole file returns zero matches (import block at lines 10-30 no longer includes it), confirming full removal. SUPPLEMENT_PHONE_COLUMN_INDEX import (line 14) and its 'Doplnit' usage (lines 507, 571) are unchanged. All 4 acceptance criteria verified.
 
 ## Point 5
 
@@ -176,7 +184,7 @@ Acceptance criteria:
 - Both tests follow the existing tempfile.TemporaryDirectory()-based config.toml fixture pattern already used by test_load_config_reads_gate_definitions, not a mocked filesystem
 - Actually executing the full test suite (13 tests total after this addition) and confirming all pass is an explicit manual follow-up for the owner, per this contract's Out of Scope, since the programmer has no Bash access to run it
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -192,7 +200,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T07:21:52+02:00._
+
+Two new tests added: test_load_config_defaults_phone_column_index_when_omitted (asserts phone_column_index == imported GATE_PHONE_COLUMN_INDEX when omitted) and test_load_config_reads_explicit_phone_column_index (asserts == 3 when explicitly set), both built on the same tempfile.TemporaryDirectory()-based config.toml fixture pattern as test_load_config_reads_gate_definitions, no filesystem mocking used. GATE_PHONE_COLUMN_INDEX added to the send_sms import list (line 12). Counted `def test_` occurrences in the file: 13, matching the contract's expected 11+2 total. All 4 acceptance criteria verified (execution itself correctly deferred to the owner per Out of Scope, and this review does not require it).
 
 ## Point 6
 
@@ -203,7 +213,7 @@ Acceptance criteria:
 - The other example gate entry is left without a 'phone_column_index' line, demonstrating the default-when-omitted behavior
 - No other field of either example gate (id, phone, password, sheet) or the top-level gateway_base/excel_path is changed
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -219,7 +229,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T07:21:52+02:00._
+
+config.example.toml: gate id=2 ('Liberecka') gained `phone_column_index = 2`, an explicit integer distinct from the GATE_PHONE_COLUMN_INDEX default of 1. Gate id=1 ('Benesovska') has no phone_column_index line, demonstrating default-when-omitted. No other field (id/phone/password/sheet) or top-level gateway_base/excel_path changed. All 3 acceptance criteria verified.
 
 ## Point 7
 
@@ -231,7 +243,7 @@ Acceptance criteria:
 - The remaining 'Current limitations' bullets (missing tests for main.py/streamlit_app.py, stale-lock recovery) remain present and unaltered
 - No other section of project/README.md is modified
 
-> Status: IMPLEMENTED
+> Status: APPROVED
 
 Programmer note:
 
@@ -247,7 +259,9 @@ Tests:
 
 Reviewer's implementation review for this point:
 
-_Awaiting review._
+_By `reviewer`, 2026-08-19T07:21:52+02:00._
+
+The 'phone number column layout is assumed uniform...' bullet is gone from 'Current limitations' (now contains only the main.py/streamlit_app.py test-coverage bullet and the stale-lock recovery bullet, unaltered). 'Current capabilities (v0.1)' gained a new bullet (README.md:47-50) stating each gate's phone-number column is configurable via the optional phone_column_index field in config.toml, defaulting to the prior hardcoded value when omitted. Read the full README.md top-to-bottom (Purpose, both target sections, Development environment, Planned evolution) — no other section content changed; the pre-existing stale '8 tests' line and the pre-existing 'per-gate column configuration' mention in 'Planned evolution' were correctly left untouched, matching the contract's narrow Out of Scope restriction on this file. All 4 acceptance criteria verified.
 
 ---
 
@@ -293,7 +307,11 @@ Made the gate sheet's phone-number column configurable per gate via an optional 
 
 # Implementation Review
 
-_Awaiting implementation review._
+### Round 1 — 2026-08-19T07:21:52+02:00 — Verdict: APPROVED — Reviewer: `reviewer`
+
+Implementation matches all 7 points of the contract exactly. GateConfig gained phone_column_index defaulting to GATE_PHONE_COLUMN_INDEX; load_config() parses the optional key with correct default/validation/error-naming behavior; the three send_sms.py functions and both streamlit_app.py call sites now read the gate's own phone_column_index, with the now-unused GATE_PHONE_COLUMN_INDEX import cleanly removed from streamlit_app.py while SUPPLEMENT_PHONE_COLUMN_INDEX/doplneni_seznamu_zavor is untouched; two new tempfile-based unit tests were added (file now has 13 tests total, confirmed by count); config.example.toml illustrates both the default and override on its two gates; README.md moved exactly the one named bullet with no other section altered. No out-of-scope files were touched beyond the two auto-generated framework bookkeeping files, which reflect the contract's own state transition rather than manual scope creep.
+
+Out of Scope check: OK — Diffed file list checked against the contract's Outputs: project/send_sms.py, project/streamlit_app.py, project/tests/test_send_sms.py, project/config.example.toml, project/README.md are exactly the five files the contract's Outputs section names, and content-level review (above) confirms every change in each maps to a specific point with no unrelated edits (e.g. main.py — explicitly Out of Scope — has zero GATE_PHONE_COLUMN_INDEX references and was not modified, confirmed by grep). The two remaining diffed files, agents/architect/WORKING_STATE.md and agents/programmer/runtime/session.log, are both framework-generated bookkeeping artifacts, not manual programmer edits within contract scope: WORKING_STATE.md's own header states it is 'Generated automatically from the live contract queue on every state change... do not edit by hand' and its content is simply the contract's own status/handoff transition (READY_FOR_REVIEWER, handed off to reviewer); session.log is an append-only tool-call trace whose final segment (07:18-07:19) lists exactly Read/Edit operations against the five in-scope files and nothing else. Neither reflects a scope decision made by the programmer beyond what the contract's points call for. No unexplained out-of-scope change found.
 
 ---
 
@@ -307,12 +325,12 @@ _Not filled in._
 {
   "number": 5,
   "title": "Make the gate sheet's phone-number column configurable per gate",
-  "status": "READY_FOR_REVIEWER",
+  "status": "APPROVED",
   "created_by": "architect",
-  "assigned_to": "reviewer",
-  "handoff_to": "reviewer",
+  "assigned_to": "owner",
+  "handoff_to": "owner",
   "created_at": "2026-08-19T07:16:34+02:00",
-  "updated_at": "2026-08-19T07:20:08+02:00",
+  "updated_at": "2026-08-19T07:21:52+02:00",
   "points": [
     {
       "number": 1,
@@ -330,10 +348,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "project/send_sms.py:53 — GateConfig now has `phone_column_index: int = GATE_PHONE_COLUMN_INDEX` added after id/phone/password/sheet, dataclass remains `@dataclass(frozen=True)` with no other field changed, added, or reordered. Matches both acceptance criteria exactly.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T07:21:52+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 2,
@@ -353,10 +371,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "project/send_sms.py:169-189 — load_config() checks `if 'phone_column_index' in gate`: coerces with int(), catching (ValueError, TypeError) and raising ConfigurationError naming the gate (line 173-175); validates non-negative, raising ConfigurationError naming the gate if negative (line 176-179); defaults to GATE_PHONE_COLUMN_INDEX when absent (line 180-181); resolved value passed into the constructed GateConfig (line 188). All existing id/phone/password/sheet validation (lines 154-167) is untouched. All 4 acceptance criteria verified.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T07:21:52+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 3,
@@ -377,10 +395,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "poslat_davkove_sms (line 613), najit_cisla_ze_seznamu_na_zavore (line 701), and najit_duplikaty (line 728) all pass column_index=gate.phone_column_index. doplneni_seznamu_zavor (line 645) still uses SUPPLEMENT_PHONE_COLUMN_INDEX/SUPPLEMENT_SHEET_NAME, unchanged. GATE_PHONE_COLUMN_INDEX module constant remains defined at line 30, still serving as GateConfig's default. All 5 acceptance criteria verified.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T07:21:52+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 4,
@@ -400,10 +418,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "streamlit_app.py line 496: load_analysis_cached call now passes selected_gate.phone_column_index positionally. Line 558: render_sheet_editor call now passes column_index=selected_gate.phone_column_index. Grep for GATE_PHONE_COLUMN_INDEX across the whole file returns zero matches (import block at lines 10-30 no longer includes it), confirming full removal. SUPPLEMENT_PHONE_COLUMN_INDEX import (line 14) and its 'Doplnit' usage (lines 507, 571) are unchanged. All 4 acceptance criteria verified.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T07:21:52+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 5,
@@ -423,10 +441,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "Two new tests added: test_load_config_defaults_phone_column_index_when_omitted (asserts phone_column_index == imported GATE_PHONE_COLUMN_INDEX when omitted) and test_load_config_reads_explicit_phone_column_index (asserts == 3 when explicitly set), both built on the same tempfile.TemporaryDirectory()-based config.toml fixture pattern as test_load_config_reads_gate_definitions, no filesystem mocking used. GATE_PHONE_COLUMN_INDEX added to the send_sms import list (line 12). Counted `def test_` occurrences in the file: 13, matching the contract's expected 11+2 total. All 4 acceptance criteria verified (execution itself correctly deferred to the owner per Out of Scope, and this review does not require it).",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T07:21:52+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 6,
@@ -445,10 +463,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "config.example.toml: gate id=2 ('Liberecka') gained `phone_column_index = 2`, an explicit integer distinct from the GATE_PHONE_COLUMN_INDEX default of 1. Gate id=1 ('Benesovska') has no phone_column_index line, demonstrating default-when-omitted. No other field (id/phone/password/sheet) or top-level gateway_base/excel_path changed. All 3 acceptance criteria verified.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T07:21:52+02:00",
+      "status": "APPROVED"
     },
     {
       "number": 7,
@@ -468,10 +486,10 @@ _Not filled in._
       "programmer_tests": [
         "No test execution performed — programmer's Claude 'edit' permission profile has no Bash access, per this contract's explicit Out of Scope. New and existing tests were verified by reading and tracing their logic against the load_config()/GateConfig implementation. Actually running the full suite (13 tests) to confirm all pass is a manual follow-up for the owner."
       ],
-      "reviewer_note": "",
-      "reviewer_note_author": "",
-      "reviewer_note_at": "",
-      "status": "IMPLEMENTED"
+      "reviewer_note": "The 'phone number column layout is assumed uniform...' bullet is gone from 'Current limitations' (now contains only the main.py/streamlit_app.py test-coverage bullet and the stale-lock recovery bullet, unaltered). 'Current capabilities (v0.1)' gained a new bullet (README.md:47-50) stating each gate's phone-number column is configurable via the optional phone_column_index field in config.toml, defaulting to the prior hardcoded value when omitted. Read the full README.md top-to-bottom (Purpose, both target sections, Development environment, Planned evolution) — no other section content changed; the pre-existing stale '8 tests' line and the pre-existing 'per-gate column configuration' mention in 'Planned evolution' were correctly left untouched, matching the contract's narrow Out of Scope restriction on this file. All 4 acceptance criteria verified.",
+      "reviewer_note_author": "reviewer",
+      "reviewer_note_at": "2026-08-19T07:21:52+02:00",
+      "status": "APPROVED"
     }
   ],
   "implementer": "programmer",
@@ -495,6 +513,53 @@ _Not filled in._
     }
   ],
   "completion_notes": "Made the gate sheet's phone-number column configurable per gate via an optional phone_column_index field in config.toml, defaulting to the existing GATE_PHONE_COLUMN_INDEX constant when omitted. Updated GateConfig, load_config(), the three send_sms.py call sites, and the two streamlit_app.py call sites; added two new unit tests; updated config.example.toml and README.md accordingly. All changes confined to project/. Test execution not performed (no Bash access per contract's Out of Scope) — tests were verified by reading/tracing logic against the implementation.",
-  "implementation_review_rounds": []
+  "implementation_review_rounds": [
+    {
+      "round": 1,
+      "date": "2026-08-19T07:21:52+02:00",
+      "verdict": "APPROVED",
+      "reviewer": "reviewer",
+      "summary": "Implementation matches all 7 points of the contract exactly. GateConfig gained phone_column_index defaulting to GATE_PHONE_COLUMN_INDEX; load_config() parses the optional key with correct default/validation/error-naming behavior; the three send_sms.py functions and both streamlit_app.py call sites now read the gate's own phone_column_index, with the now-unused GATE_PHONE_COLUMN_INDEX import cleanly removed from streamlit_app.py while SUPPLEMENT_PHONE_COLUMN_INDEX/doplneni_seznamu_zavor is untouched; two new tempfile-based unit tests were added (file now has 13 tests total, confirmed by count); config.example.toml illustrates both the default and override on its two gates; README.md moved exactly the one named bullet with no other section altered. No out-of-scope files were touched beyond the two auto-generated framework bookkeeping files, which reflect the contract's own state transition rather than manual scope creep.",
+      "out_of_scope_ok": true,
+      "out_of_scope_findings": "Diffed file list checked against the contract's Outputs: project/send_sms.py, project/streamlit_app.py, project/tests/test_send_sms.py, project/config.example.toml, project/README.md are exactly the five files the contract's Outputs section names, and content-level review (above) confirms every change in each maps to a specific point with no unrelated edits (e.g. main.py — explicitly Out of Scope — has zero GATE_PHONE_COLUMN_INDEX references and was not modified, confirmed by grep). The two remaining diffed files, agents/architect/WORKING_STATE.md and agents/programmer/runtime/session.log, are both framework-generated bookkeeping artifacts, not manual programmer edits within contract scope: WORKING_STATE.md's own header states it is 'Generated automatically from the live contract queue on every state change... do not edit by hand' and its content is simply the contract's own status/handoff transition (READY_FOR_REVIEWER, handed off to reviewer); session.log is an append-only tool-call trace whose final segment (07:18-07:19) lists exactly Read/Edit operations against the five in-scope files and nothing else. Neither reflects a scope decision made by the programmer beyond what the contract's points call for. No unexplained out-of-scope change found.",
+      "reviews": [
+        {
+          "point": 1,
+          "status": "APPROVED",
+          "review": "project/send_sms.py:53 — GateConfig now has `phone_column_index: int = GATE_PHONE_COLUMN_INDEX` added after id/phone/password/sheet, dataclass remains `@dataclass(frozen=True)` with no other field changed, added, or reordered. Matches both acceptance criteria exactly."
+        },
+        {
+          "point": 2,
+          "status": "APPROVED",
+          "review": "project/send_sms.py:169-189 — load_config() checks `if 'phone_column_index' in gate`: coerces with int(), catching (ValueError, TypeError) and raising ConfigurationError naming the gate (line 173-175); validates non-negative, raising ConfigurationError naming the gate if negative (line 176-179); defaults to GATE_PHONE_COLUMN_INDEX when absent (line 180-181); resolved value passed into the constructed GateConfig (line 188). All existing id/phone/password/sheet validation (lines 154-167) is untouched. All 4 acceptance criteria verified."
+        },
+        {
+          "point": 3,
+          "status": "APPROVED",
+          "review": "poslat_davkove_sms (line 613), najit_cisla_ze_seznamu_na_zavore (line 701), and najit_duplikaty (line 728) all pass column_index=gate.phone_column_index. doplneni_seznamu_zavor (line 645) still uses SUPPLEMENT_PHONE_COLUMN_INDEX/SUPPLEMENT_SHEET_NAME, unchanged. GATE_PHONE_COLUMN_INDEX module constant remains defined at line 30, still serving as GateConfig's default. All 5 acceptance criteria verified."
+        },
+        {
+          "point": 4,
+          "status": "APPROVED",
+          "review": "streamlit_app.py line 496: load_analysis_cached call now passes selected_gate.phone_column_index positionally. Line 558: render_sheet_editor call now passes column_index=selected_gate.phone_column_index. Grep for GATE_PHONE_COLUMN_INDEX across the whole file returns zero matches (import block at lines 10-30 no longer includes it), confirming full removal. SUPPLEMENT_PHONE_COLUMN_INDEX import (line 14) and its 'Doplnit' usage (lines 507, 571) are unchanged. All 4 acceptance criteria verified."
+        },
+        {
+          "point": 5,
+          "status": "APPROVED",
+          "review": "Two new tests added: test_load_config_defaults_phone_column_index_when_omitted (asserts phone_column_index == imported GATE_PHONE_COLUMN_INDEX when omitted) and test_load_config_reads_explicit_phone_column_index (asserts == 3 when explicitly set), both built on the same tempfile.TemporaryDirectory()-based config.toml fixture pattern as test_load_config_reads_gate_definitions, no filesystem mocking used. GATE_PHONE_COLUMN_INDEX added to the send_sms import list (line 12). Counted `def test_` occurrences in the file: 13, matching the contract's expected 11+2 total. All 4 acceptance criteria verified (execution itself correctly deferred to the owner per Out of Scope, and this review does not require it)."
+        },
+        {
+          "point": 6,
+          "status": "APPROVED",
+          "review": "config.example.toml: gate id=2 ('Liberecka') gained `phone_column_index = 2`, an explicit integer distinct from the GATE_PHONE_COLUMN_INDEX default of 1. Gate id=1 ('Benesovska') has no phone_column_index line, demonstrating default-when-omitted. No other field (id/phone/password/sheet) or top-level gateway_base/excel_path changed. All 3 acceptance criteria verified."
+        },
+        {
+          "point": 7,
+          "status": "APPROVED",
+          "review": "The 'phone number column layout is assumed uniform...' bullet is gone from 'Current limitations' (now contains only the main.py/streamlit_app.py test-coverage bullet and the stale-lock recovery bullet, unaltered). 'Current capabilities (v0.1)' gained a new bullet (README.md:47-50) stating each gate's phone-number column is configurable via the optional phone_column_index field in config.toml, defaulting to the prior hardcoded value when omitted. Read the full README.md top-to-bottom (Purpose, both target sections, Development environment, Planned evolution) — no other section content changed; the pre-existing stale '8 tests' line and the pre-existing 'per-gate column configuration' mention in 'Planned evolution' were correctly left untouched, matching the contract's narrow Out of Scope restriction on this file. All 4 acceptance criteria verified."
+        }
+      ]
+    }
+  ]
 }
 CONTRACT-META -->
