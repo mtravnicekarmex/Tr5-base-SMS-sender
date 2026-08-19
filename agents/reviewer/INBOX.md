@@ -34,3 +34,10 @@
 - Status: `READY_FOR_REVIEWER`
 - File: `contracts/IMPLEMENTATION_CONTRACT_0005.md`
 - Message: Implementation is done and awaiting implementation review.
+
+## 2026-08-19T14:48:06+02:00 — IMPLEMENTATION_CONTRACT_0006
+
+- From: `programmer`
+- Status: `READY_FOR_REVIEWER`
+- File: `contracts/IMPLEMENTATION_CONTRACT_0006.md`
+- Message: Implementation is done and awaiting implementation review.

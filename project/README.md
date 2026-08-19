@@ -42,6 +42,14 @@ here. The project's original source, prior to migration, lives in
 - `tests/test_send_sms.py` — unit tests for the core logic in
   `send_sms.py`; the full suite (8 tests) has been confirmed passing by
   the owner after installing dependencies.
+- `tests/test_main.py` — unit tests for `main.py`'s argument parsing
+  (`build_parser()`, all six subcommands) and dispatch logic (`main()`,
+  invoked via its `argv` parameter with each of the six `send_sms`
+  functions mocked, so no real network or file I/O occurs).
+- `tests/test_streamlit_app.py` — unit tests for `streamlit_app.py`'s
+  pure, non-UI data-transformation helper functions (`gate_label`,
+  `rows_dataframe`, `editable_numbers_dataframe`, `messages_dataframe`,
+  `results_dataframe`).
 - `config.example.toml` — configuration template for the gateway
   credentials and gate sheet definitions.
 - Each gate's phone-number column is configurable per gate via an optional
@@ -73,8 +81,11 @@ root `.gitignore`'s `config.toml` entry.
 
 ## Current limitations
 
-- No automated tests exist for `main.py` (CLI argument parsing / exit
-  codes) or for `streamlit_app.py`.
+- `streamlit_app.py`'s Streamlit-dependent rendering/interaction code
+  (its tabs, forms, session-state handling, widgets, and `main()` itself)
+  remains untested; covering it would require a dedicated harness such as
+  `streamlit.testing.v1.AppTest` and is deferred to a possible future
+  contract, not attempted here.
 - A `<workbook>.lock` file left behind by a process that crashes mid-save
   is not automatically cleared (no staleness/TTL recovery); such a lock
   would need to be removed manually before further saves can succeed.

@@ -118,9 +118,9 @@ def serialize_results(results: Sequence[object]) -> str:
     return json.dumps(normalized, ensure_ascii=False, indent=2)
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     configure_logging(args.verbose)
 
     try:

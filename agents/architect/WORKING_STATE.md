@@ -7,4 +7,4 @@ IMPLEMENTATION_CONTRACT_0002: APPROVED (risk: standard) (handed off to owner) �
 IMPLEMENTATION_CONTRACT_0003: APPROVED (risk: standard) (handed off to owner) — Detect and reject concurrent writes to the shared Excel workbook
 IMPLEMENTATION_CONTRACT_0004: APPROVED (risk: standard) (handed off to owner) — Add --timeout CLI parity to main.py's SMS-sending subcommands
 IMPLEMENTATION_CONTRACT_0005: APPROVED (risk: standard) (handed off to owner) — Make the gate sheet's phone-number column configurable per gate
-IMPLEMENTATION_CONTRACT_0006: READY_FOR_PROGRAMMER (risk: standard) (handed off to programmer) — Add automated test coverage for main.py and streamlit_app.py's pure helpers
+IMPLEMENTATION_CONTRACT_0006: READY_FOR_REVIEWER (risk: standard) (handed off to reviewer) — Add automated test coverage for main.py and streamlit_app.py's pure helpers

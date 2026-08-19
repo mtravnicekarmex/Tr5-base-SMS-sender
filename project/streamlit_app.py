@@ -30,12 +30,6 @@ from send_sms import (
 )
 
 
-st.set_page_config(
-    page_title="Sprava GSM zavor",
-    layout="wide",
-)
-
-
 def inject_styles() -> None:
     st.markdown(
         """
@@ -814,4 +808,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    st.set_page_config(
+        page_title="Sprava GSM zavor",
+        layout="wide",
+    )
     main()
