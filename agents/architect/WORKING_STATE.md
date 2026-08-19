@@ -6,3 +6,4 @@ IMPLEMENTATION_CONTRACT_0001: APPROVED (risk: standard) (handed off to owner) �
 IMPLEMENTATION_CONTRACT_0002: APPROVED (risk: standard) (handed off to owner) — Migrate SMS gateway application from read-only source/project/ into project/
 IMPLEMENTATION_CONTRACT_0003: APPROVED (risk: standard) (handed off to owner) — Detect and reject concurrent writes to the shared Excel workbook
 IMPLEMENTATION_CONTRACT_0004: APPROVED (risk: standard) (handed off to owner) — Add --timeout CLI parity to main.py's SMS-sending subcommands
+IMPLEMENTATION_CONTRACT_0005: READY_FOR_PROGRAMMER (risk: standard) (handed off to programmer) — Make the gate sheet's phone-number column configurable per gate
